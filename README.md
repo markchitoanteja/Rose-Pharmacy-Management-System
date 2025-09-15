@@ -39,7 +39,7 @@ A lightweight pharmacy management system built with **PHP (OOP)**, **MySQL**, an
 
 So your path will look like:
 ```
-C:\xampp\htdocs\Rose-Pharmacy\
+C:\xampp\htdocs\Rose-Pharmacy-Management-System\
 ```
 
 ---
@@ -47,7 +47,7 @@ C:\xampp\htdocs\Rose-Pharmacy\
 ### Step 3: Configure the Database
 1. Open your browser and go to: [http://localhost/phpmyadmin](http://localhost/phpmyadmin).
 2. Click on **Databases** → create a new database:
-   - Name: `rose_pharmacy`
+   - Name: `rose_pharmacy_management_system`
    - Collation: `utf8mb4_general_ci`
 3. The system will automatically create tables when first run (thanks to `Database.php`).
 
@@ -93,7 +93,7 @@ Default admin credentials are:
 - If login page looks broken:
   - Make sure you’re visiting `http://localhost/Rose-Pharmacy-Management-System` (not file path).
 - If database is empty:
-  - Ensure you created the database `rose_pharmacy` in phpMyAdmin.
+  - Ensure you created the database `rose_pharmacy_management_system` in phpMyAdmin.
   - Reload the page, system auto-creates missing tables.
 
 ---
