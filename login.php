@@ -24,9 +24,9 @@ if (isset($_SESSION['user_id'])) {
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
-    <link rel="stylesheet" href="dist/auth/plugins/bootstrap/css/bootstrap.min.css?ver=<?= env('APP_VERSION') ?>">
-    <link rel="stylesheet" href="dist/auth/plugins/fontawesome/css/all.min.css?ver=<?= env('APP_VERSION') ?>">
-    <link rel="stylesheet" href="dist/auth/plugins/sweetalert/css/sweetalert.min.css?ver=<?= env('APP_VERSION') ?>">
+    <link rel="stylesheet" href="dist/plugins/bootstrap/css/bootstrap.min.css?ver=<?= env('APP_VERSION') ?>">
+    <link rel="stylesheet" href="dist/plugins/fontawesome/css/all.min.css?ver=<?= env('APP_VERSION') ?>">
+    <link rel="stylesheet" href="dist/plugins/sweetalert/css/sweetalert.min.css?ver=<?= env('APP_VERSION') ?>">
     <link rel="stylesheet" href="dist/auth/css/style.css?ver=<?= env('APP_VERSION') ?>">
 </head>
 
@@ -53,28 +53,24 @@ if (isset($_SESSION['user_id'])) {
                         <p class="text-muted small">Secure Login</p>
                     </div>
 
-                    <?php if (!empty($error)): ?>
-                        <div class="alert alert-danger"><?php echo e($error); ?></div>
-                    <?php endif; ?>
-
                     <!-- Login Form -->
                     <form action="javascript:void(0)" id="login_form">
                         <div class="form-group">
                             <label for="login_username">Username</label>
-                            <input type="text" class="form-control" id="login_username" required>
+                            <input type="text" class="form-control" id="login_username" value="<?= isset($_SESSION['username']) ? $_SESSION['username'] : '' ?>" required>
                         </div>
                         <div class="form-group">
                             <label for="login_password">Password</label>
                             <div class="password-wrapper">
-                                <input type="password" class="form-control" id="login_password" required>
+                                <input type="password" class="form-control" id="login_password" value="<?= isset($_SESSION['password']) ? $_SESSION['password'] : '' ?>" required>
                                 <i class="fas fa-eye toggle-password" id="togglePassword"></i>
                             </div>
                         </div>
                         <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                            <label class="form-check-label" for="remember">Remember Me</label>
+                            <input type="checkbox" class="form-check-input" id="login_remember" <?= isset($_SESSION['remember_me']) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="login_remember">Remember Me</label>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        <button type="submit" class="btn btn-primary btn-block" id="login_submit">Login</button>
                     </form>
 
                     <!-- Footer -->
@@ -115,10 +111,18 @@ if (isset($_SESSION['user_id'])) {
         </div>
     </div>
 
-    <script src="dist/auth/plugins/jquery/jquery.min.js?ver=<?= env('APP_VERSION') ?>"></script>
-    <script src="dist/auth/plugins/bootstrap/js/bootstrap.bundle.min.js?ver=<?= env('APP_VERSION') ?>"></script>
-    <script src="dist/auth/plugins/sweetalert/js/sweetalert.min.js?ver=<?= env('APP_VERSION') ?>"></script>
+    <script>
+        const base_url = '<?= base_url() ?>';
+        const server_url = base_url + 'server';
+        const notification = <?php echo isset($_SESSION['notification']) ? json_encode($_SESSION['notification']) : 'null'; ?>;
+    </script>
+
+    <script src="dist/plugins/jquery/jquery.min.js?ver=<?= env('APP_VERSION') ?>"></script>
+    <script src="dist/plugins/bootstrap/js/bootstrap.bundle.min.js?ver=<?= env('APP_VERSION') ?>"></script>
+    <script src="dist/plugins/sweetalert/js/sweetalert.min.js?ver=<?= env('APP_VERSION') ?>"></script>
     <script src="dist/auth/js/script.js?ver=<?= env('APP_VERSION') ?>"></script>
 </body>
 
 </html>
+
+<?php unset($_SESSION['notification']); ?>

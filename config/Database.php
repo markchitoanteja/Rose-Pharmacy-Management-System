@@ -10,13 +10,12 @@ class Database
     private $dbname;
     private $conn;
 
-    // Constructor -> initialize connection & setup
     public function __construct()
     {
         $this->servername = env("DB_HOST");
-        $this->username = env("DB_USERNAME");
-        $this->password = env("DB_PASSWORD");
-        $this->dbname = env("DB_DATABASE");
+        $this->username   = env("DB_USERNAME");
+        $this->password   = env("DB_PASSWORD");
+        $this->dbname     = env("DB_DATABASE");
 
         $this->connectServer();
         $this->createDatabase();
@@ -25,27 +24,19 @@ class Database
         $this->insertDefaults();
     }
 
-    // Connect to MySQL server (no DB selected yet)
     private function connectServer()
     {
         try {
-            // Attempt to connect
             $this->conn = @new mysqli($this->servername, $this->username, $this->password);
-
-            // Check for connection errors
             if ($this->conn->connect_error) {
                 throw new Exception("Database connection failed: " . $this->conn->connect_error);
             }
         } catch (Exception $e) {
-            // Log error
             log_error($e->getMessage());
-
-            // Stop execution with a safe message
             die("Connection failed. Please check logs for details.");
         }
     }
 
-    // Create database if not exists
     private function createDatabase()
     {
         $sql = "CREATE DATABASE IF NOT EXISTS " . $this->dbname;
@@ -54,13 +45,11 @@ class Database
         }
     }
 
-    // Select the database
     private function connectDatabase()
     {
         $this->conn->select_db($this->dbname);
     }
 
-    // Create all required tables
     private function createTables()
     {
         $queries = [];
@@ -133,37 +122,114 @@ class Database
         }
     }
 
-    // Insert default roles & admin user if not exists
     private function insertDefaults()
     {
-        // Insert Roles
         $this->conn->query("INSERT IGNORE INTO roles (role_id, role_name) VALUES (1, 'Admin'), (2, 'Cashier')");
-
-        // Insert Default Admin
         $adminPassword = password_hash("admin123", PASSWORD_DEFAULT);
         $this->conn->query("INSERT IGNORE INTO users (user_id, full_name, username, password_hash, role_id)
                             VALUES (1, 'Default Admin', 'admin', '$adminPassword', 1)");
     }
 
-    // Public function to get DB connection
+    // ========================
+    // SQL Helper Functions
+    // ========================
+
+    public function insert($table, $data)
+    {
+        $fields = implode(", ", array_keys($data));
+        $placeholders = implode(", ", array_fill(0, count($data), "?"));
+        $sql = "INSERT INTO $table ($fields) VALUES ($placeholders)";
+
+        $stmt = $this->conn->prepare($sql);
+        $types = str_repeat("s", count($data));
+        $stmt->bind_param($types, ...array_values($data));
+
+        return $stmt->execute();
+    }
+
+    public function update($table, $data, $where, $whereParams)
+    {
+        $set = implode(", ", array_map(fn($k) => "$k = ?", array_keys($data)));
+        $sql = "UPDATE $table SET $set WHERE $where";
+
+        $stmt = $this->conn->prepare($sql);
+        $types = str_repeat("s", count($data) + count($whereParams));
+        $stmt->bind_param($types, ...array_merge(array_values($data), $whereParams));
+
+        return $stmt->execute();
+    }
+
+    public function delete($table, $where, $whereParams)
+    {
+        $sql = "DELETE FROM $table WHERE $where";
+        $stmt = $this->conn->prepare($sql);
+        $types = str_repeat("s", count($whereParams));
+        $stmt->bind_param($types, ...$whereParams);
+
+        return $stmt->execute();
+    }
+
+    public function select_one($table, $where, $whereParams)
+    {
+        $sql = "SELECT * FROM $table WHERE $where LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $types = str_repeat("s", count($whereParams));
+        $stmt->bind_param($types, ...$whereParams);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+    public function select_many($table, $where, $whereParams, $orderBy = null, $direction = "ASC", $limit = null)
+    {
+        $sql = "SELECT * FROM $table WHERE $where";
+        if ($orderBy) $sql .= " ORDER BY $orderBy $direction";
+        if ($limit) $sql .= " LIMIT $limit";
+
+        $stmt = $this->conn->prepare($sql);
+        $types = str_repeat("s", count($whereParams));
+        $stmt->bind_param($types, ...$whereParams);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function select_all($table, $orderBy = null, $direction = "ASC", $limit = null)
+    {
+        $sql = "SELECT * FROM $table";
+        if ($orderBy) $sql .= " ORDER BY $orderBy $direction";
+        if ($limit) $sql .= " LIMIT $limit";
+
+        $result = $this->conn->query($sql);
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function custom_query($sql, $params = [])
+    {
+        $stmt = $this->conn->prepare($sql);
+
+        if ($params) {
+            $types = str_repeat("s", count($params));
+            $stmt->bind_param($types, ...$params);
+        }
+
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
     public function getConnection()
     {
         return $this->conn;
     }
 
-    // Public query helper
     public function query($sql)
     {
         return $this->conn->query($sql);
     }
 
-    // Prevent SQL injection with prepared statements
     public function prepare($sql)
     {
         return $this->conn->prepare($sql);
     }
 
-    // Close connection
     public function close()
     {
         $this->conn->close();

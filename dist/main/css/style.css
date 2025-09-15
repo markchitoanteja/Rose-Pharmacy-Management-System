@@ -1,0 +1,160 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+}
+
+/* ===== Navbar ===== */
+.navbar {
+    background-color: #a6192e;
+}
+
+.navbar-brand,
+.nav-link,
+.navbar-text {
+    color: #fff !important;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+    height: 100vh;
+    background-color: #343a40;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    overflow-y: auto;
+    padding-top: 60px;
+    /* space for navbar */
+    transition: all 0.3s ease;
+}
+
+.sidebar.collapsed {
+    margin-left: -220px;
+}
+
+.sidebar a {
+    color: #adb5bd;
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+.sidebar a.active,
+.sidebar a:hover {
+    background-color: #495057;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* ===== Content ===== */
+.content-wrapper {
+    flex: 1;
+    margin-left: 220px;
+    /* space for sidebar */
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.content-wrapper.expanded {
+    margin-left: 0;
+}
+
+/* ===== Cards ===== */
+.card {
+    border-radius: 10px;
+    border: none;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.card .card-body {
+    padding: 25px;
+}
+
+.card .card-icon {
+    font-size: 2.5rem;
+    color: #a6192e;
+    margin-bottom: 15px;
+}
+
+.card .btn {
+    border-radius: 20px;
+    padding: 6px 20px;
+    font-size: 0.9rem;
+}
+
+/* ===== Table ===== */
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.table thead {
+    background-color: #a6192e;
+    color: #fff;
+    border: none;
+}
+
+.table th {
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f3f6;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.table td,
+.table th {
+    vertical-align: middle !important;
+    padding: 12px 15px;
+}
+
+.card-header {
+    background: linear-gradient(45deg, #a6192e, #c62828);
+    color: #fff;
+    border-bottom: none;
+    font-weight: 600;
+}
+
+/* ===== Footer ===== */
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer {
+    background-color: #fff;
+    /* Light background */
+    color: #6c757d;
+    padding: 15px 20px;
+    font-size: 0.9rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    position: relative;
+    /* stays below content */
+    margin-left: 220px;
+    /* align with content (sidebar width) */
+    transition: margin-left 0.3s ease;
+}
+
+/* Adjust footer when sidebar is collapsed */
+.sidebar.collapsed~.footer {
+    margin-left: 0;
+}

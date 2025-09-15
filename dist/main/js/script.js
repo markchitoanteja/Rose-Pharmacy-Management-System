@@ -15,47 +15,43 @@ $(document).ready(function () {
         });
     }
 
-    $('#login_form').submit(function () {
-        const username = $('#login_username').val().trim();
-        const password = $('#login_password').val().trim();
-        const remember = $('#login_remember').is(':checked') ? 1 : 0;
-
-        $('#login_username').prop('disabled', true);
-        $('#login_password').prop('disabled', true);
-        $('#login_remember').prop('disabled', true);
-
-        $('#login_submit').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in...');
-
-        var formData = new FormData();
-
-        formData.append('username', username);
-        formData.append('password', password);
-        formData.append('remember', remember);
-
-        formData.append('action', 'login_user');
-
-        $.ajax({
-            url: server_url,
-            data: formData,
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                if (response) {
-                    location.reload();
-                }
-            },
-            error: function (_, _, error) {
-                console.error(error);
-            }
-        });
+    $("#sidebarToggle").on("click", function () {
+        $("#sidebar").toggleClass("collapsed");
+        $("#content").toggleClass("expanded");
     });
 
-    $("#togglePassword").on("click", function () {
-        const $passwordInput = $("#login_password");
-        const type = $passwordInput.attr("type") === "password" ? "text" : "password";
-        $passwordInput.attr("type", type);
-        $(this).toggleClass("fa-eye fa-eye-slash");
+    $('#logout_btn').on("click", function () {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You will be logged out.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, logout",
+            cancelButtonText: "No, cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var formData = new FormData();
+
+                formData.append('action', 'logout');
+
+                $.ajax({
+                    url: server_url,
+                    data: formData,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response) {
+                            location.href = base_url;
+                        }
+                    },
+                    error: function (_, _, error) {
+                        console.error(error);
+                    }
+                });
+            }
+        });
     });
 
     $(document).on("keypress", function (e) {
@@ -166,10 +162,5 @@ $(document).ready(function () {
                 window.location.href = "about:blank";
             });
         }
-    }
-
-    if (!localStorage.getItem("visited")) {
-        $("#firstTimeModal").modal("show");
-        localStorage.setItem("visited", "true");
     }
 });
