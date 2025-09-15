@@ -1,0 +1,91 @@
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.login-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+.login-left {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-left .image-section {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.login-left .image-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.login-left .image-section::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0.6));
+}
+
+.login-left .image-section.top {
+    border-bottom: 5px solid #ffffff;
+}
+
+.login-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.card {
+    width: 100%;
+    max-width: 400px;
+}
+
+.card-title {
+    color: #a6192e;
+}
+
+/* Password input group with Font Awesome eye icon */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #6c757d;
+}
+
+/* Hide Edge/Chromium native password reveal button */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none !important;
+}
