@@ -86,31 +86,12 @@ Default admin credentials are:
 
 ---
 
-## 📂 Project Structure
-```
-Rose-Pharmacy/
-│── config/
-│   ├── App.php
-│   ├── Database.php
-│── dist/
-│   └── auth/images/   # Login page background & logo
-│── logs/              # Error logs stored here
-│── index.php
-│── login.php
-│── dashboard.php
-│── .env
-│── README.md
-│── LICENSE
-```
-
----
-
 ## 🛠️ Troubleshooting
 - If **Apache** or **MySQL** won’t start:
   - Close other apps using ports 80 or 3306 (Skype, IIS, MySQL server).
   - Change port in XAMPP if needed.
 - If login page looks broken:
-  - Make sure you’re visiting `http://localhost/Rose-Pharmacy` (not file path).
+  - Make sure you’re visiting `http://localhost/Rose-Pharmacy-Management-System` (not file path).
 - If database is empty:
   - Ensure you created the database `rose_pharmacy` in phpMyAdmin.
   - Reload the page, system auto-creates missing tables.
