@@ -140,8 +140,19 @@ $(document).ready(function () {
     }, 1000);
 
     function checkExpiration() {
-        const expirationDate = new Date("2025-09-25T23:59:59Z");
+        const encrypted = validity;
+        const decoded = atob(encrypted);
+        const parts = decoded.match(/(\w+)\s(\d+),\s(\d{4})/);
+        
+        if (!parts) return;
+        
+        const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        const month = monthNames.indexOf(parts[1]);
+        const day = parseInt(parts[2], 10);
+        const year = parseInt(parts[3], 10);
+        const expirationDate = new Date(Date.UTC(year, month, day, 23, 59, 59));
         const now = new Date();
+        
         if (now > expirationDate) {
             Swal.fire({
                 icon: "error",

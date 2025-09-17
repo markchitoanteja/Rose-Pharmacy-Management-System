@@ -212,7 +212,8 @@ class Database
         }
 
         $stmt->execute();
-        return $stmt->get_result();
+
+        return $stmt->get_result()->fetch_assoc();
     }
 
     public function getConnection()

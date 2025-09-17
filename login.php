@@ -56,11 +56,11 @@ if (isset($_SESSION['user_id'])) {
                     <!-- Login Form -->
                     <form action="javascript:void(0)" id="login_form">
                         <div class="form-group">
-                            <label for="login_username">Username</label>
+                            <label for="login_username" class="mb-1">Username</label>
                             <input type="text" class="form-control" id="login_username" value="<?= isset($_SESSION['username']) ? $_SESSION['username'] : '' ?>" required>
                         </div>
-                        <div class="form-group">
-                            <label for="login_password">Password</label>
+                        <div class="form-group mb-1">
+                            <label for="login_password" class="mb-1">Password</label>
                             <div class="password-wrapper">
                                 <input type="password" class="form-control" id="login_password" value="<?= isset($_SESSION['password']) ? $_SESSION['password'] : '' ?>" required>
                                 <i class="fas fa-eye toggle-password" id="togglePassword"></i>
@@ -112,9 +112,10 @@ if (isset($_SESSION['user_id'])) {
     </div>
 
     <script>
-        const base_url = '<?= base_url() ?>';
-        const server_url = base_url + 'server';
-        const notification = <?php echo isset($_SESSION['notification']) ? json_encode($_SESSION['notification']) : 'null'; ?>;
+        const base_url = <?= json_encode(base_url()) ?>;
+        const server_url = <?= json_encode(base_url() . 'server') ?>;
+        const validity = <?= json_encode(env('APP_VALIDITY')) ?>;
+        const notification = <?= isset($_SESSION['notification']) ? json_encode($_SESSION['notification']) : 'null'; ?>;
     </script>
 
     <script src="dist/plugins/jquery/jquery.min.js?ver=<?= env('APP_VERSION') ?>"></script>

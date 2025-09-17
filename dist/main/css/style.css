@@ -1,4 +1,6 @@
+/* ===== Reset / Base ===== */
 body {
+    margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f6f9;
 }
@@ -14,6 +16,14 @@ body {
     color: #fff !important;
 }
 
+.wrapper.expanded {
+    margin-left: 0;
+}
+
+.navbar-container {
+    width: 230px;
+}
+
 /* ===== Sidebar ===== */
 .sidebar {
     height: 100vh;
@@ -24,9 +34,10 @@ body {
     left: 0;
     width: 220px;
     overflow-y: auto;
-    padding-top: 60px;
-    /* space for navbar */
+    padding-top: 56px;
+    /* match navbar height */
     transition: all 0.3s ease;
+    z-index: 1000;
 }
 
 .sidebar.collapsed {
@@ -47,97 +58,31 @@ body {
     font-weight: bold;
 }
 
-/* ===== Content ===== */
-.content-wrapper {
-    flex: 1;
+/* ===== Wrapper (Content + Footer) ===== */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     margin-left: 220px;
     /* space for sidebar */
-    padding: 20px;
-    transition: all 0.3s ease;
+    transition: margin-left 0.3s ease;
 }
 
-.content-wrapper.expanded {
+.sidebar.collapsed~.wrapper {
     margin-left: 0;
 }
 
-/* ===== Cards ===== */
-.card {
-    border-radius: 10px;
-    border: none;
-    background: #fff;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-}
-
-.card .card-body {
-    padding: 25px;
-}
-
-.card .card-icon {
-    font-size: 2.5rem;
-    color: #a6192e;
-    margin-bottom: 15px;
-}
-
-.card .btn {
-    border-radius: 20px;
-    padding: 6px 20px;
-    font-size: 0.9rem;
-}
-
-/* ===== Table ===== */
-.table {
-    border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
-}
-
-.table thead {
-    background-color: #a6192e;
-    color: #fff;
-    border: none;
-}
-
-.table th {
-    font-weight: 600;
-    font-size: 0.9rem;
-    letter-spacing: 0.5px;
-}
-
-.table-hover tbody tr:hover {
-    background-color: #f1f3f6;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.table td,
-.table th {
-    vertical-align: middle !important;
-    padding: 12px 15px;
-}
-
-.card-header {
-    background: linear-gradient(45deg, #a6192e, #c62828);
-    color: #fff;
-    border-bottom: none;
-    font-weight: 600;
+/* ===== Content ===== */
+.content-wrapper {
+    flex: 1;
+    padding: 20px;
+    padding-top: 76px;
+    /* 56px navbar + 20px spacing */
 }
 
 /* ===== Footer ===== */
-.wrapper {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
 .footer {
     background-color: #fff;
-    /* Light background */
     color: #6c757d;
     padding: 15px 20px;
     font-size: 0.9rem;
@@ -148,13 +93,59 @@ body {
     text-align: center;
 
     position: relative;
-    /* stays below content */
-    margin-left: 220px;
-    /* align with content (sidebar width) */
-    transition: margin-left 0.3s ease;
+    width: 100%;
 }
 
-/* Adjust footer when sidebar is collapsed */
-.sidebar.collapsed~.footer {
-    margin-left: 0;
+/* Loading overlay styles */
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    transition: opacity 0.3s ease;
+}
+
+#loadingOverlay .spinner {
+    margin-bottom: 20px;
+}
+
+#loadingOverlay .loading-text {
+    font-size: 1.2rem;
+    color: #a6192e;
+    letter-spacing: 2px;
+    font-weight: 600;
+    animation: loadingTextPulse 1.2s infinite;
+}
+
+@keyframes loadingTextPulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* Spinner */
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #a6192e;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }

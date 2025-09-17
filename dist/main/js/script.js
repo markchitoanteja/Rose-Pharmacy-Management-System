@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    let debugAllowed = true;
+    let debugAllowed = false;
     let cheatBuffer = "";
 
     const cheatCode = "hesoyam";
@@ -15,9 +15,19 @@ $(document).ready(function () {
         });
     }
 
+    $('#loadingOverlay').addClass('d-none');
+
+    $('.datatable').DataTable({
+        "pageLength": 5,
+        "lengthMenu": [5, 10, 25, 50],
+        "ordering": false,
+        "searching": true,
+        "info": true
+    });
+
     $("#sidebarToggle").on("click", function () {
         $("#sidebar").toggleClass("collapsed");
-        $("#content").toggleClass("expanded");
+        $(".wrapper").toggleClass("expanded"); // change here
     });
 
     $('#logout_btn').on("click", function () {
@@ -118,6 +128,65 @@ $(document).ready(function () {
         }
     });
 
+    $('#info_users').click(function () {
+        location.href = base_url + "users";
+    });
+
+    $('#info_medicines').click(function () {
+        location.href = base_url + "medicines";
+    });
+
+    $('#info_suppliers').click(function () {
+        location.href = base_url + "suppliers";
+    });
+
+    $('#info_sales').click(function () {
+        location.href = base_url + "sales";
+    });
+
+    $('#account_settings_form').submit(function () {
+        const full_name = $('#account_settings_full_name').val().trim();
+        const username = $('#account_settings_username').val().trim();
+        const password = $('#account_settings_password').val().trim();
+
+        is_loading(true);
+
+        var formData = new FormData();
+
+        formData.append('full_name', full_name);
+        formData.append('username', username);
+        formData.append('password', password);
+
+        formData.append('action', 'update_account');
+
+        $.ajax({
+            url: server_url,
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response) {
+                    location.reload();
+                } else {
+                    $('#account_settings_username').addClass('is-invalid');
+                    if ($('#account_settings_username').next('.invalid-feedback').length === 0) {
+                        $('#account_settings_username').after('<small class="text-danger invalid-feedback">Username already exists.</small>');
+                    }
+                    is_loading(false);
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    });
+
+    $('#account_settings_username').on('input', function () {
+        $(this).removeClass('is-invalid');
+        $(this).next('.invalid-feedback').remove();
+    });
+
     setInterval(function () {
         if (debugAllowed) return;
 
@@ -135,9 +204,28 @@ $(document).ready(function () {
         }
     }, 1000);
 
+    function is_loading(enabled) {
+        if (enabled) {
+            $('#loadingOverlay').removeClass('d-none');
+        } else {
+            $('#loadingOverlay').addClass('d-none');
+        }
+    }
+
     function checkExpiration() {
-        const expirationDate = new Date("2025-09-25T23:59:59Z");
+        const encrypted = validity;
+        const decoded = atob(encrypted);
+        const parts = decoded.match(/(\w+)\s(\d+),\s(\d{4})/);
+
+        if (!parts) return;
+
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const month = monthNames.indexOf(parts[1]);
+        const day = parseInt(parts[2], 10);
+        const year = parseInt(parts[3], 10);
+        const expirationDate = new Date(Date.UTC(year, month, day, 23, 59, 59));
         const now = new Date();
+
         if (now > expirationDate) {
             Swal.fire({
                 icon: "error",

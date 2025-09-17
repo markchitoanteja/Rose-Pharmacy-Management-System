@@ -34,14 +34,65 @@ if ($action === 'login_user') {
             unset($_SESSION['remember_me']);
         }
 
-        $_SESSION['notification'] = ["icon" => "success", "text" => "Welcome back, " . $user['full_name'] . "!", "title" => "Login Successful"];
+        $_SESSION['notification'] = [
+            "icon" => "success",
+            "text" => "Welcome back, " . $user['full_name'] . "!",
+            "title" => "Login Successful"
+        ];
     } else {
-        $_SESSION['notification'] = ["icon" => "error", "text" => "Invalid username or password.", "title" => "Login Failed"];
+        $_SESSION['notification'] = [
+            "icon" => "error",
+            "text" => "Invalid username or password.",
+            "title" => "Login Failed"
+        ];
     }
 
     echo json_encode(true);
+}
 
-    exit;
+if ($action === 'update_account') {
+    $full_name = trim($_POST['full_name'] ?? '');
+    $username = trim($_POST['username'] ?? '');
+    $password = trim($_POST['password'] ?? '');
+
+    $response = false;
+
+    $user_id = $_SESSION['user_id'];
+
+    // Check if username is taken by another user
+    $existingUser = $db->select_one("users", "username = ? AND user_id != ?", [$username, $user_id]);
+
+    if (!$existingUser) {
+        // Prepare data for update
+        $data = [
+            "full_name" => $full_name,
+            "username" => $username
+        ];
+
+        if (!empty($password)) {
+            $data["password_hash"] = password_hash($password, PASSWORD_BCRYPT);
+        }
+
+        $updated = $db->update("users", $data, "user_id = ?", [$user_id]);
+
+        if ($updated) {
+            $_SESSION['notification'] = [
+                "icon" => "success",
+                "text" => "Account updated successfully.",
+                "title" => "Success"
+            ];
+        } else {
+            $_SESSION['notification'] = [
+                "icon" => "error",
+                "text" => "No changes were made or an error occurred.",
+                "title" => "Error"
+            ];
+        }
+
+        $response = true;
+    }
+
+    echo json_encode($response);
 }
 
 if ($action === 'logout') {
