@@ -21,7 +21,7 @@ medicine inventory, employee access, and secure logins.
 
 -   Windows 10 or 11
 -   [XAMPP](https://www.apachefriends.org/download.html) (PHP 7.4+
-    recommended)\
+    recommended)
 -   Modern web browser (Chrome, Edge, Firefox)
 
 ------------------------------------------------------------------------
