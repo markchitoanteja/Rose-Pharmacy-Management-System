@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    let debugAllowed = false;
+    let debugAllowed = true;
     let cheatBuffer = "";
 
     const cheatCode = "hesoyam";
@@ -185,6 +185,215 @@ $(document).ready(function () {
     $('#account_settings_username').on('input', function () {
         $(this).removeClass('is-invalid');
         $(this).next('.invalid-feedback').remove();
+    });
+
+    $('#add_user_form').submit(function () {
+        const full_name = $('#add_user_full_name').val().trim();
+        const username = $('#add_user_username').val().trim();
+        const password = $('#add_user_password').val().trim();
+        const role_id = $('#add_user_role_id').val().trim();
+
+        is_loading(true);
+
+        var formData = new FormData();
+
+        formData.append('full_name', full_name);
+        formData.append('username', username);
+        formData.append('password', password);
+        formData.append('role_id', role_id);
+
+        formData.append('action', 'add_user');
+
+        $.ajax({
+            url: server_url,
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response) {
+                    location.reload();
+                } else {
+                    $('#add_user_username').addClass('is-invalid');
+
+                    if ($('#add_user_username').next('.invalid-feedback').length === 0) {
+                        $('#add_user_username').after('<small class="text-danger invalid-feedback">Username already exists.</small>');
+                    }
+
+                    is_loading(false);
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    });
+
+    $('#add_user_username').on('input', function () {
+        $(this).removeClass('is-invalid');
+        $(this).next('.invalid-feedback').remove();
+    });
+
+    $(document).on('click', '.update_user', function () {
+        const user_id = $(this).data('user_id');
+        const full_name = $(this).closest('tr').find('td:nth-child(1)').text().trim();
+        const username = $(this).closest('tr').find('td:nth-child(2)').text().trim();
+        const role_id = $(this).data('role_id');
+        const created_at = $(this).data('created_at');
+
+        is_loading(true);
+
+        $('#update_user_id').val(user_id);
+        $('#update_user_full_name').val(full_name);
+        $('#update_user_username').val(username);
+        $('#update_user_role_id').val(role_id);
+        $('#update_user_user_id').val(user_id);
+
+        const dateObj = new Date(created_at);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+        $('#update_user_created_at').val(dateObj.toLocaleDateString(undefined, options));
+
+        is_loading(false);
+
+        $('#updateUserModal').modal('show');
+    });
+
+    $('#update_user_form').submit(function () {
+        const full_name = $('#update_user_full_name').val().trim();
+        const username = $('#update_user_username').val().trim();
+        const password = $('#update_user_password').val().trim();
+        const role_id = $('#update_user_role_id').val().trim();
+        const user_id = $('#update_user_user_id').val().trim();
+
+        is_loading(true);
+
+        var formData = new FormData();
+
+        formData.append('full_name', full_name);
+        formData.append('username', username);
+        formData.append('password', password);
+        formData.append('role_id', role_id);
+        formData.append('user_id', user_id);
+
+        formData.append('action', 'update_user');
+
+        $.ajax({
+            url: server_url,
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response) {
+                    location.reload();
+                } else {
+                    $('#update_user_username').addClass('is-invalid');
+
+                    if ($('#update_user_username').next('.invalid-feedback').length === 0) {
+                        $('#update_user_username').after('<small class="text-danger invalid-feedback">Username already exists.</small>');
+                    }
+
+                    is_loading(false);
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
+    });
+
+    $('#update_user_username').on('input', function () {
+        $(this).removeClass('is-invalid');
+        $(this).next('.invalid-feedback').remove();
+    });
+
+    $(document).on('click', '.delete_user', function () {
+        const user_id = $(this).data('user_id');
+        const full_name = $(this).closest('tr').find('td:nth-child(1)').text().trim();
+
+        Swal.fire({
+            icon: "warning",
+            title: "Delete User",
+            text: `Are you sure you want to delete user "${full_name}"?`,
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                is_loading(true);
+
+                var formData = new FormData();
+
+                formData.append('user_id', user_id);
+
+                formData.append('action', 'delete_user');
+
+                $.ajax({
+                    url: server_url,
+                    data: formData,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response) {
+                            location.reload();
+                        }
+                    },
+                    error: function (_, _, error) {
+                        console.error(error);
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.toggle_user', function () {
+        const user_id = $(this).data('user_id');
+        const status = $(this).data('status'); // 0 = deactivate, 1 = activate
+        const full_name = $(this).closest('tr').find('td:nth-child(1)').text().trim();
+
+        const actionText = status === 0 ? "deactivate" : "reactivate";
+        const confirmBtnText = status === 0 ? "Yes, deactivate it!" : "Yes, reactivate it!";
+        const confirmBtnColor = status === 0 ? "#d33" : "#28a745";
+
+        Swal.fire({
+            icon: "warning",
+            title: `${actionText.charAt(0).toUpperCase() + actionText.slice(1)} User`,
+            text: `Are you sure you want to ${actionText} user "${full_name}"?`,
+            showCancelButton: true,
+            confirmButtonColor: confirmBtnColor,
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: confirmBtnText
+        }).then((result) => {
+            if (result.isConfirmed) {
+                is_loading(true);
+
+                var formData = new FormData();
+                formData.append('user_id', user_id);
+                formData.append('status', status);
+                formData.append('action', 'toggle_user');
+
+                $.ajax({
+                    url: server_url,
+                    data: formData,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response) {
+                            location.reload();
+                        }
+                    },
+                    error: function (_, _, error) {
+                        console.error(error);
+                    }
+                });
+            }
+        });
     });
 
     setInterval(function () {

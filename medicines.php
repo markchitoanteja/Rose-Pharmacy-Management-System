@@ -1,4 +1,17 @@
-<?php include_once 'header.php'; ?>
+<?php
+include_once 'header.php';
+
+// Restrict access to admins only
+if ($user['role_id'] != 1) {
+    $_SESSION['notification'] = [
+        "icon" => "error",
+        "text" => "You do not have permission to access this page.",
+        "title" => "Access Denied"
+    ];
+    header("Location: dashboard");
+    exit;
+}
+?>
 
 <!-- Main Content -->
 <div class="content-wrapper" id="content">

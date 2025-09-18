@@ -17,6 +17,12 @@ $user = $db->select_one("users", "user_id = ?", [$_SESSION['user_id']]);
 
 // Detect active page (basic)
 $currentPage = basename($_SERVER['PHP_SELF']);
+
+if ($currentPage === 'activity_logs.php') {
+    $page_title = 'Activity Logs';
+} else {
+    $page_title = ucfirst(str_replace('.php', '', $currentPage));
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +31,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Rose Pharmacy - <?= ucfirst(str_replace('.php', '', $currentPage)) ?></title>
+    <title>Rose Pharmacy - <?= e($page_title) ?></title>
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
@@ -72,9 +78,37 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
-            <a href="dashboard.php" class="<?= $currentPage === 'dashboard.php' ? 'active' : ''; ?>"><i class="fas fa-tachometer-alt mr-1"></i> Dashboard</a>
-            <a href="medicines.php" class="<?= $currentPage === 'medicines.php' ? 'active' : ''; ?>"><i class="fas fa-pills mr-1"></i> Medicines</a>
-            <a href="suppliers.php" class="<?= $currentPage === 'suppliers.php' ? 'active' : ''; ?>"><i class="fas fa-truck mr-1"></i> Suppliers</a>
-            <a href="sales.php" class="<?= $currentPage === 'sales.php' ? 'active' : ''; ?>"><i class="fas fa-shopping-cart mr-1"></i> Sales</a>
-            <a href="users.php" class="<?= $currentPage === 'users.php' ? 'active' : ''; ?>"><i class="fas fa-users mr-1"></i> Users</a>
+            <a href="dashboard.php" class="<?= $currentPage === 'dashboard.php' ? 'active' : ''; ?>">
+                <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
+            </a>
+
+            <?php if ($user['role_id'] == 1): // Admin only 
+            ?>
+                <a href="medicines.php" class="<?= $currentPage === 'medicines.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-pills mr-1"></i> Medicines <i class="fas fa-tools float-right text-warning"></i>
+                </a>
+
+                <a href="suppliers.php" class="<?= $currentPage === 'suppliers.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-truck mr-1"></i> Suppliers <i class="fas fa-tools float-right text-warning"></i>
+                </a>
+
+                <a href="sales.php" class="<?= $currentPage === 'sales.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-shopping-cart mr-1"></i> Sales <i class="fas fa-tools float-right text-warning"></i>
+                </a>
+
+                <a href="users.php" class="<?= $currentPage === 'users.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-users mr-1"></i> Users
+                </a>
+
+                <a href="activity_logs.php" class="<?= $currentPage === 'activity_logs.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-file-alt mr-1"></i> Activity Logs <i class="fas fa-tools float-right text-warning"></i>
+                </a>
+            <?php endif; ?>
+
+            <?php if ($user['role_id'] == 2): // Cashier only 
+            ?>
+                <a href="cashier.php" class="<?= $currentPage === 'cashier.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-cash-register mr-1"></i> Cashier
+                </a>
+            <?php endif; ?>
         </div>

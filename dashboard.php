@@ -1,10 +1,11 @@
 <?php
 include_once 'header.php';
 
-$count_users = count($db->select_all("users"));
+$count_users = count($db->custom_query("SELECT * FROM users WHERE is_active = 1"));
+$count_users_inactive = count($db->custom_query("SELECT * FROM users WHERE is_active = 0"));
 $count_medicines = count($db->select_all("medicines"));
 $count_suppliers = count($db->select_all("suppliers"));
-$result = $db->custom_query("SELECT SUM(total_amount) as total_sales FROM sales")["total_sales"];
+$result = $db->custom_query("SELECT SUM(total_amount) as total_sales FROM sales", [], true)["total_sales"];
 $total_sales = isset($result) ? $result : 0;
 ?>
 
@@ -75,20 +76,20 @@ $total_sales = isset($result) ? $result : 0;
 
         <!-- Info Boxes -->
         <div class="row">
-            <div class="col-md-3 col-sm-6 mb-4" id="info_users">
+            <div class="col-md-3 mb-4 loada" id="info_users">
                 <div class="card info-box bg-primary text-white">
                     <div class="card-body d-flex align-items-center">
                         <div class="icon-box mr-3">
                             <i class="fas fa-users"></i>
                         </div>
                         <div>
-                            <h5 class="mb-0"><?= $count_users ?></h5>
+                            <h5 class="mb-0"><?= $count_users ?> <small class="text-light">(Inactive: <?= $count_users_inactive ?>)</small></h5>
                             <small>Users</small>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6 mb-4" id="info_medicines">
+            <div class="col-md-3 mb-4" id="info_medicines">
                 <div class="card info-box bg-success text-white">
                     <div class="card-body d-flex align-items-center">
                         <div class="icon-box mr-3">
@@ -101,7 +102,7 @@ $total_sales = isset($result) ? $result : 0;
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6 mb-4" id="info_suppliers">
+            <div class="col-md-3 mb-4" id="info_suppliers">
                 <div class="card info-box bg-warning text-white">
                     <div class="card-body d-flex align-items-center">
                         <div class="icon-box mr-3">
@@ -114,7 +115,7 @@ $total_sales = isset($result) ? $result : 0;
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6 mb-4" id="info_sales">
+            <div class="col-md-3 mb-4" id="info_sales">
                 <div class="card info-box bg-danger text-white">
                     <div class="card-body d-flex align-items-center">
                         <div class="icon-box mr-3">
@@ -129,14 +130,14 @@ $total_sales = isset($result) ? $result : 0;
             </div>
         </div>
 
-        <!-- Example Table -->
+        <!-- Recent Transactions Table -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h6 class="mb-0">Recent Transactions</h6>
                 <a href="<?= base_url('sales') ?>" class="btn btn-sm btn-outline-primary">View All</a>
             </div>
             <div class="card-body">
-                <table class="table datatable">
+                <table class="table table-bordered datatable">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -148,7 +149,7 @@ $total_sales = isset($result) ? $result : 0;
                         </tr>
                     </thead>
                     <tbody>
-                        
+
                     </tbody>
                 </table>
             </div>

@@ -1,0 +1,2 @@
+[2025-09-18 17:45:42] ERROR: Cannot delete or update a parent row: a foreign key constraint fails (`rose_pharmacy_management_system`.`activity_logs`, CONSTRAINT `activity_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`))
+[2025-09-18 17:47:44] ERROR: Cannot delete or update a parent row: a foreign key constraint fails (`rose_pharmacy_management_system`.`activity_logs`, CONSTRAINT `activity_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`))

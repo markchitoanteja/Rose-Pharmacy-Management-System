@@ -65,6 +65,7 @@ class Database
             username VARCHAR(50) UNIQUE NOT NULL,
             password_hash VARCHAR(255) NOT NULL,
             role_id INT NOT NULL,
+            is_active TINYINT(1) NOT NULL DEFAULT 1, -- 1 = active, 0 = inactive (soft delete)
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (role_id) REFERENCES roles(role_id)
         )";
@@ -130,92 +131,6 @@ class Database
                             VALUES (1, 'Default Admin', 'admin', '$adminPassword', 1)");
     }
 
-    // ========================
-    // SQL Helper Functions
-    // ========================
-
-    public function insert($table, $data)
-    {
-        $fields = implode(", ", array_keys($data));
-        $placeholders = implode(", ", array_fill(0, count($data), "?"));
-        $sql = "INSERT INTO $table ($fields) VALUES ($placeholders)";
-
-        $stmt = $this->conn->prepare($sql);
-        $types = str_repeat("s", count($data));
-        $stmt->bind_param($types, ...array_values($data));
-
-        return $stmt->execute();
-    }
-
-    public function update($table, $data, $where, $whereParams)
-    {
-        $set = implode(", ", array_map(fn($k) => "$k = ?", array_keys($data)));
-        $sql = "UPDATE $table SET $set WHERE $where";
-
-        $stmt = $this->conn->prepare($sql);
-        $types = str_repeat("s", count($data) + count($whereParams));
-        $stmt->bind_param($types, ...array_merge(array_values($data), $whereParams));
-
-        return $stmt->execute();
-    }
-
-    public function delete($table, $where, $whereParams)
-    {
-        $sql = "DELETE FROM $table WHERE $where";
-        $stmt = $this->conn->prepare($sql);
-        $types = str_repeat("s", count($whereParams));
-        $stmt->bind_param($types, ...$whereParams);
-
-        return $stmt->execute();
-    }
-
-    public function select_one($table, $where, $whereParams)
-    {
-        $sql = "SELECT * FROM $table WHERE $where LIMIT 1";
-        $stmt = $this->conn->prepare($sql);
-        $types = str_repeat("s", count($whereParams));
-        $stmt->bind_param($types, ...$whereParams);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
-    }
-
-    public function select_many($table, $where, $whereParams, $orderBy = null, $direction = "ASC", $limit = null)
-    {
-        $sql = "SELECT * FROM $table WHERE $where";
-        if ($orderBy) $sql .= " ORDER BY $orderBy $direction";
-        if ($limit) $sql .= " LIMIT $limit";
-
-        $stmt = $this->conn->prepare($sql);
-        $types = str_repeat("s", count($whereParams));
-        $stmt->bind_param($types, ...$whereParams);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    }
-
-    public function select_all($table, $orderBy = null, $direction = "ASC", $limit = null)
-    {
-        $sql = "SELECT * FROM $table";
-        if ($orderBy) $sql .= " ORDER BY $orderBy $direction";
-        if ($limit) $sql .= " LIMIT $limit";
-
-        $result = $this->conn->query($sql);
-        return $result->fetch_all(MYSQLI_ASSOC);
-    }
-
-    public function custom_query($sql, $params = [])
-    {
-        $stmt = $this->conn->prepare($sql);
-
-        if ($params) {
-            $types = str_repeat("s", count($params));
-            $stmt->bind_param($types, ...$params);
-        }
-
-        $stmt->execute();
-
-        return $stmt->get_result()->fetch_assoc();
-    }
-
     public function getConnection()
     {
         return $this->conn;
@@ -234,5 +149,166 @@ class Database
     public function close()
     {
         $this->conn->close();
+    }
+
+    // ========================
+    // SQL Helper Functions
+    // ========================
+
+    public function insert($table, $data)
+    {
+        try {
+            $fields = implode(", ", array_keys($data));
+            $placeholders = implode(", ", array_fill(0, count($data), "?"));
+            $sql = "INSERT INTO $table ($fields) VALUES ($placeholders)";
+
+            $stmt = $this->conn->prepare($sql);
+            if (!$stmt) {
+                throw new Exception("Insert prepare failed: " . $this->conn->error);
+            }
+
+            $types = str_repeat("s", count($data));
+            $stmt->bind_param($types, ...array_values($data));
+
+            return $stmt->execute();
+        } catch (Exception $e) {
+            log_error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function update($table, $data, $where, $whereParams)
+    {
+        try {
+            $set = implode(", ", array_map(fn($k) => "$k = ?", array_keys($data)));
+            $sql = "UPDATE $table SET $set WHERE $where";
+
+            $stmt = $this->conn->prepare($sql);
+            if (!$stmt) {
+                throw new Exception("Update prepare failed: " . $this->conn->error);
+            }
+
+            $types = str_repeat("s", count($data) + count($whereParams));
+            $stmt->bind_param($types, ...array_merge(array_values($data), $whereParams));
+
+            return $stmt->execute();
+        } catch (Exception $e) {
+            log_error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function delete($table, $where, $whereParams)
+    {
+        try {
+            $sql = "DELETE FROM $table WHERE $where";
+            $stmt = $this->conn->prepare($sql);
+            if (!$stmt) {
+                throw new Exception("Delete prepare failed: " . $this->conn->error);
+            }
+
+            $types = str_repeat("s", count($whereParams));
+            $stmt->bind_param($types, ...$whereParams);
+
+            return $stmt->execute();
+        } catch (Exception $e) {
+            log_error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function select_one($table, $where, $whereParams)
+    {
+        try {
+            $sql = "SELECT * FROM $table WHERE $where LIMIT 1";
+            $stmt = $this->conn->prepare($sql);
+            if (!$stmt) {
+                throw new Exception("Select_one prepare failed: " . $this->conn->error);
+            }
+
+            $types = str_repeat("s", count($whereParams));
+            $stmt->bind_param($types, ...$whereParams);
+            $stmt->execute();
+
+            return $stmt->get_result()->fetch_assoc();
+        } catch (Exception $e) {
+            log_error($e->getMessage());
+            return null;
+        }
+    }
+
+    public function select_many($table, $where, $whereParams, $orderBy = null, $direction = "ASC", $limit = null)
+    {
+        try {
+            $sql = "SELECT * FROM $table WHERE $where";
+            if ($orderBy) $sql .= " ORDER BY $orderBy $direction";
+            if ($limit) $sql .= " LIMIT $limit";
+
+            $stmt = $this->conn->prepare($sql);
+            if (!$stmt) {
+                throw new Exception("Select_many prepare failed: " . $this->conn->error);
+            }
+
+            $types = str_repeat("s", count($whereParams));
+            $stmt->bind_param($types, ...$whereParams);
+            $stmt->execute();
+
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            log_error($e->getMessage());
+            return [];
+        }
+    }
+
+    public function select_all($table, $orderBy = null, $direction = "ASC", $limit = null)
+    {
+        try {
+            $sql = "SELECT * FROM $table";
+            if ($orderBy) $sql .= " ORDER BY $orderBy $direction";
+            if ($limit) $sql .= " LIMIT $limit";
+
+            $result = $this->conn->query($sql);
+            if (!$result) {
+                throw new Exception("Select_all query failed: " . $this->conn->error);
+            }
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            log_error($e->getMessage());
+            return [];
+        }
+    }
+
+    public function custom_query($sql, $params = [], $single = false)
+    {
+        try {
+            $stmt = $this->conn->prepare($sql);
+            if (!$stmt) {
+                throw new Exception("Custom_query prepare failed: " . $this->conn->error);
+            }
+
+            if ($params) {
+                $types = str_repeat("s", count($params));
+                $stmt->bind_param($types, ...$params);
+            }
+
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if (!$result) {
+                throw new Exception("Custom_query execution failed: " . $stmt->error);
+            }
+
+            $rows = $result->fetch_all(MYSQLI_ASSOC);
+
+            if ($single) {
+                return $rows[0] ?? null; // return single row
+            }
+
+            return $rows; // always array of rows
+        } catch (Exception $e) {
+            log_error($e->getMessage());
+            return $single ? null : [];
+        }
     }
 }

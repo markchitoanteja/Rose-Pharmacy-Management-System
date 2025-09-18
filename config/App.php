@@ -83,7 +83,7 @@ function log_error($message)
         mkdir($logDir, 0777, true);
     }
 
-    $file = $logDir . '/app.log';
+    $file = $logDir . '/errors.log';
     $date = date('Y-m-d H:i:s');
 
     // Format: [2025-09-15 12:00:00] ERROR: message
