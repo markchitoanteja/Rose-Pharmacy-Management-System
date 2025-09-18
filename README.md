@@ -19,7 +19,7 @@ medicine inventory, employee access, and secure logins.
 
 ## 🖥️ Requirements
 
--   Windows 10 or 11\
+-   Windows 10 or 11
 -   [XAMPP](https://www.apachefriends.org/download.html) (PHP 7.4+
     recommended)\
 -   Modern web browser (Chrome, Edge, Firefox)
@@ -31,8 +31,8 @@ medicine inventory, employee access, and secure logins.
 ### Step 1: Install XAMPP
 
 1.  Download XAMPP from [Apache
-    Friends](https://www.apachefriends.org/download.html).\
-2.  Install it on your `C:\` drive (default path: `C:\xampp`).\
+    Friends](https://www.apachefriends.org/download.html).
+2.  Install it on your `C:\` drive (default path: `C:\xampp`).
 3.  Open **XAMPP Control Panel** and start:
     -   **Apache**
     -   **MySQL**
@@ -45,9 +45,9 @@ You have **two options**:
 
 #### Option A: Download as ZIP (recommended for most users)
 
-1.  Click **Code → Download ZIP** from the repository.\
+1.  Click **Code → Download ZIP** from the repository.
 
-2.  Extract the ZIP file.\
+2.  Extract the ZIP file.
 
 3.  Rename the extracted folder to:
 
@@ -74,10 +74,10 @@ So your project path will look like:
 
 ### Step 3: Configure the Database
 
-1.  Open your browser and go to: <http://localhost/phpmyadmin>.\
+1.  Open your browser and go to: <http://localhost/phpmyadmin>.
 2.  Click on **Databases** → create a new database:
-    -   Name: `rose_pharmacy_management_system`\
-    -   Collation: `utf8mb4_general_ci`\
+    -   Name: `rose_pharmacy_management_system`
+    -   Collation: `utf8mb4_general_ci`
 3.  The system will automatically create tables on first run (thanks to
     `Database.php`).
 
@@ -85,7 +85,7 @@ So your project path will look like:
 
 ### Step 4: Configure Environment File
 
-1.  Inside the project folder, find the file named `.env`.\
+1.  Inside the project folder, find the file named `.env`.
 
 2.  Update values if needed:
 
@@ -97,7 +97,7 @@ So your project path will look like:
     ```
 
     > ⚠️ Default XAMPP credentials:
-    > -   Username: `root`\
+    > -   Username: `root`
     > -   Password: *(leave blank)*
 
 ------------------------------------------------------------------------
@@ -114,8 +114,8 @@ So your project path will look like:
 
 ### Step 6: First Login
 
-Default admin credentials are:\
-- **Username:** `admin`\
+Default admin credentials are:
+- **Username:** `admin`
 - **Password:** `admin123`
 
 > ✅ Change the password after your first login.
@@ -138,17 +138,17 @@ Default admin credentials are:\
 
 -   **Apache or MySQL won't start:**
     -   Close apps using ports 80 or 3306 (Skype, IIS, another MySQL
-        service).\
-    -   Or change ports in XAMPP settings.\
+        service).
+    -   Or change ports in XAMPP settings.
 -   **Broken login page:**
-    -   Make sure you're visiting the URL, not opening an HTML file.\
+    -   Make sure you're visiting the URL, not opening an HTML file.
 
     -   Correct link:
 
             http://localhost/Rose-Pharmacy-Management-System
 -   **Database is empty:**
     -   Ensure you created `rose_pharmacy_management_system` in
-        phpMyAdmin.\
+        phpMyAdmin.
     -   Reload the page --- tables are auto-created if missing.
 
 ------------------------------------------------------------------------
