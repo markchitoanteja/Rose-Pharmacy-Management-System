@@ -396,6 +396,10 @@ $(document).ready(function () {
         });
     });
 
+    $(document).on('click', '.loadable', function(){
+        is_loading(true);
+    });
+
     setInterval(function () {
         if (debugAllowed) return;
 

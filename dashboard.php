@@ -76,7 +76,7 @@ $total_sales = isset($result) ? $result : 0;
 
         <!-- Info Boxes -->
         <div class="row">
-            <div class="col-md-3 mb-4 loada" id="info_users">
+            <div class="col-md-3 mb-4 loadable" id="info_users">
                 <div class="card info-box bg-primary text-white">
                     <div class="card-body d-flex align-items-center">
                         <div class="icon-box mr-3">
@@ -89,7 +89,7 @@ $total_sales = isset($result) ? $result : 0;
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-4" id="info_medicines">
+            <div class="col-md-3 mb-4 loadable" id="info_medicines">
                 <div class="card info-box bg-success text-white">
                     <div class="card-body d-flex align-items-center">
                         <div class="icon-box mr-3">
@@ -102,7 +102,7 @@ $total_sales = isset($result) ? $result : 0;
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-4" id="info_suppliers">
+            <div class="col-md-3 mb-4 loadable" id="info_suppliers">
                 <div class="card info-box bg-warning text-white">
                     <div class="card-body d-flex align-items-center">
                         <div class="icon-box mr-3">
@@ -115,7 +115,7 @@ $total_sales = isset($result) ? $result : 0;
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-4" id="info_sales">
+            <div class="col-md-3 mb-4 loadable" id="info_sales">
                 <div class="card info-box bg-danger text-white">
                     <div class="card-body d-flex align-items-center">
                         <div class="icon-box mr-3">
@@ -134,7 +134,7 @@ $total_sales = isset($result) ? $result : 0;
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h6 class="mb-0">Recent Transactions</h6>
-                <a href="<?= base_url('sales') ?>" class="btn btn-sm btn-outline-primary">View All</a>
+                <a href="<?= base_url('sales') ?>" class="btn btn-sm btn-outline-primary loadable">View All</a>
             </div>
             <div class="card-body">
                 <table class="table table-bordered datatable">

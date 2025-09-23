@@ -21,16 +21,41 @@ if ($user['role_id'] != 1) {
                 <h3>Activity Logs</h3>
             </div>
             <div class="col-6">
-                <button class="btn btn-secondary float-right" onclick="location.reload();">
+                <button class="btn btn-secondary float-right loadable" onclick="location.reload();">
                     <i class="fas fa-sync-alt mr-1"></i>
                     Refresh
                 </button>
             </div>
         </div>
 
-        <div class="alert alert-warning d-flex align-items-center" role="alert">
-            <i class="fa fa-tools mr-2"></i>
-            <span>This page is under development. Please check back soon for updates.</span>
+        <!-- Recent Transactions Table -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">All Activity Logs</h6>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered datatable">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Log Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $activity_logs =  $db->custom_query("SELECT * FROM activity_logs JOIN users ON activity_logs.user_id = users.user_id ORDER BY log_time DESC") ?>
+                        <?php if ($activity_logs): ?>
+                            <?php foreach ($activity_logs as $log): ?>
+                                <tr>
+                                    <td><?= e($log['full_name']) ?></td>
+                                    <td><?= e($log['action']) ?></td>
+                                    <td><?= e(date("F d, Y - h:i A", strtotime($log['log_time']))) ?></td>
+                                </tr>
+                            <?php endforeach ?>
+                        <?php endif ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

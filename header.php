@@ -38,7 +38,7 @@ if ($currentPage === 'activity_logs.php') {
     <link rel="stylesheet" href="dist/plugins/bootstrap/css/bootstrap.min.css?ver=<?= env('APP_VERSION') ?>">
     <link rel="stylesheet" href="dist/plugins/fontawesome/css/all.min.css?ver=<?= env('APP_VERSION') ?>">
     <link rel="stylesheet" href="dist/plugins/sweetalert/css/sweetalert.min.css?ver=<?= env('APP_VERSION') ?>">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="dist/plugins/datatables/css/dataTables.bootstrap4.min.css?ver=<?= env('APP_VERSION') ?>">
     <link rel="stylesheet" href="dist/main/css/style.css?ver=<?= env('APP_VERSION') ?>">
 </head>
 
@@ -53,7 +53,7 @@ if ($currentPage === 'activity_logs.php') {
         <!-- Top Navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
             <div class="navbar-container">
-                <a class="navbar-brand" href="<?= base_url() ?>">Rose Pharmacy</a>
+                <a class="navbar-brand loadable" href="<?= base_url() ?>">Rose Pharmacy</a>
                 <a class="btn btn-link text-white float-right" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
                 </a>
@@ -84,30 +84,30 @@ if ($currentPage === 'activity_logs.php') {
 
             <?php if ($user['role_id'] == 1): // Admin only 
             ?>
-                <a href="medicines.php" class="<?= $currentPage === 'medicines.php' ? 'active' : ''; ?>">
+                <a href="medicines.php" class="loadable <?= $currentPage === 'medicines.php' ? 'active' : ''; ?>">
                     <i class="fas fa-pills mr-1"></i> Medicines <i class="fas fa-tools float-right text-warning"></i>
                 </a>
 
-                <a href="suppliers.php" class="<?= $currentPage === 'suppliers.php' ? 'active' : ''; ?>">
+                <a href="suppliers.php" class="loadable <?= $currentPage === 'suppliers.php' ? 'active' : ''; ?>">
                     <i class="fas fa-truck mr-1"></i> Suppliers <i class="fas fa-tools float-right text-warning"></i>
                 </a>
 
-                <a href="sales.php" class="<?= $currentPage === 'sales.php' ? 'active' : ''; ?>">
+                <a href="sales.php" class="loadable <?= $currentPage === 'sales.php' ? 'active' : ''; ?>">
                     <i class="fas fa-shopping-cart mr-1"></i> Sales <i class="fas fa-tools float-right text-warning"></i>
                 </a>
 
-                <a href="users.php" class="<?= $currentPage === 'users.php' ? 'active' : ''; ?>">
+                <a href="users.php" class="loadable <?= $currentPage === 'users.php' ? 'active' : ''; ?>">
                     <i class="fas fa-users mr-1"></i> Users
                 </a>
 
-                <a href="activity_logs.php" class="<?= $currentPage === 'activity_logs.php' ? 'active' : ''; ?>">
-                    <i class="fas fa-file-alt mr-1"></i> Activity Logs <i class="fas fa-tools float-right text-warning"></i>
+                <a href="activity_logs.php" class="loadable <?= $currentPage === 'activity_logs.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-file-alt mr-1"></i> Activity Logs
                 </a>
             <?php endif; ?>
 
             <?php if ($user['role_id'] == 2): // Cashier only 
             ?>
-                <a href="cashier.php" class="<?= $currentPage === 'cashier.php' ? 'active' : ''; ?>">
+                <a href="cashier.php" class="loadable <?= $currentPage === 'cashier.php' ? 'active' : ''; ?>">
                     <i class="fas fa-cash-register mr-1"></i> Cashier
                 </a>
             <?php endif; ?>

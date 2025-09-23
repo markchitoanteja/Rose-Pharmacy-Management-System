@@ -1,6 +1,8 @@
 <?php
 // config/App.php
 
+date_default_timezone_set(env("TIMEZONE", "Asia/Manila"));
+
 // Load .env file into $_ENV
 if (file_exists(__DIR__ . '/../.env')) {
     $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
