@@ -140,24 +140,37 @@ $(document).ready(function () {
     }, 1000);
 
     function checkExpiration() {
-        const encrypted = validity;
-        const decoded = atob(encrypted);
-        const parts = decoded.match(/(\w+)\s(\d+),\s(\d{4})/);
-        
-        if (!parts) return;
-        
-        const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-        const month = monthNames.indexOf(parts[1]);
-        const day = parseInt(parts[2], 10);
-        const year = parseInt(parts[3], 10);
-        const expirationDate = new Date(Date.UTC(year, month, day, 23, 59, 59));
-        const now = new Date();
-        
-        if (now > expirationDate) {
+        try {
+            const encrypted = validity; // base64 string
+            const decoded = atob(encrypted);
+
+            // Expect strict YYYY-MM-DD
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(decoded)) {
+                throw new Error("Invalid validity format");
+            }
+
+            const [year, month, day] = decoded.split("-").map(Number);
+
+            // Construct expiration date (end of the day in UTC)
+            const expirationDate = new Date(Date.UTC(year, month - 1, day, 23, 59, 59));
+            const now = new Date();
+
+            if (now > expirationDate) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Access Expired",
+                    text: "This application has expired. Please contact support.",
+                    confirmButtonColor: "#a6192e"
+                }).then(() => {
+                    window.location.href = "about:blank";
+                });
+            }
+        } catch (err) {
+            console.error("Expiration check failed:", err.message);
             Swal.fire({
                 icon: "error",
-                title: "Access Expired",
-                text: "This application has expired. Please contact support.",
+                title: "Invalid License",
+                text: "The application validity is corrupted or invalid. Please contact support.",
                 confirmButtonColor: "#a6192e"
             }).then(() => {
                 window.location.href = "about:blank";
