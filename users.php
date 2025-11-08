@@ -121,7 +121,6 @@ if ($user['role_id'] != 1) {
             <div class="modal-body">
                 <form action="javascript:void(0)" id="add_user_form">
                     <!-- Profile Section -->
-                    <h6 class="text-uppercase text-secondary mb-3">Profile Information</h6>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="add_user_full_name">Full Name</label>
@@ -134,14 +133,12 @@ if ($user['role_id'] != 1) {
                     </div>
 
                     <!-- Security Section -->
-                    <h6 class="text-uppercase text-secondary mt-4 mb-3">Security</h6>
                     <div class="form-group">
                         <label for="add_user_password">Password</label>
                         <input type="password" class="form-control" id="add_user_password" required>
                     </div>
 
                     <!-- Account Details -->
-                    <h6 class="text-uppercase text-secondary mt-4 mb-3">Account Details</h6>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="add_user_role_id">Role</label>
@@ -187,7 +184,6 @@ if ($user['role_id'] != 1) {
                 <form action="javascript:void(0)" id="update_user_form">
                     <input type="hidden" id="update_user_user_id">
                     <!-- Profile Section -->
-                    <h6 class="text-uppercase text-secondary mb-3">Profile Information</h6>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="update_user_full_name">Full Name</label>
@@ -200,14 +196,12 @@ if ($user['role_id'] != 1) {
                     </div>
 
                     <!-- Security Section -->
-                    <h6 class="text-uppercase text-secondary mt-4 mb-3">Security</h6>
                     <div class="form-group">
                         <label for="update_user_password">New Password <small class="text-muted">(leave blank if unchanged)</small></label>
                         <input type="password" class="form-control" id="update_user_password">
                     </div>
 
                     <!-- Account Details -->
-                    <h6 class="text-uppercase text-secondary mt-4 mb-3">Account Details</h6>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="update_user_role_id">Role</label>

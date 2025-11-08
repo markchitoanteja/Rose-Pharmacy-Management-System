@@ -1,6 +1,8 @@
 $(document).ready(function () {
-    let debugAllowed = true;
+    let debugAllowed = app_debug == "true" ? true : false;
     let cheatBuffer = "";
+
+    console.log("Debug Allowed:", debugAllowed);
 
     const cheatCode = "hesoyam";
 
@@ -141,7 +143,7 @@ $(document).ready(function () {
 
     function checkExpiration() {
         try {
-            const encrypted = validity; // base64 string
+            const encrypted = app_validity; // base64 string
             const decoded = atob(encrypted);
 
             // Expect strict YYYY-MM-DD

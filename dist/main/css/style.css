@@ -49,13 +49,26 @@ body {
     display: block;
     padding: 10px 20px;
     text-decoration: none;
+    transition: all 0.3s ease;
+    /* Smooth transition */
 }
 
-.sidebar a.active,
-.sidebar a:hover {
+/* Active link */
+.sidebar a.active {
     background-color: #495057;
-    color: #fff;
+    /* subtle darker gray */
+    color: #ffffff;
+    /* text stays white */
     font-weight: bold;
+}
+
+/* Hovered link (non-active) */
+.sidebar a:hover:not(.active) {
+    background-color: #6c757d;
+    /* lighter gray */
+    color: #ffffff;
+    /* text stays white */
+    font-weight: normal;
 }
 
 /* ===== Wrapper (Content + Footer) ===== */
@@ -125,9 +138,17 @@ body {
 }
 
 @keyframes loadingTextPulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
+    0% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.6;
+    }
 }
 
 /* Spinner */

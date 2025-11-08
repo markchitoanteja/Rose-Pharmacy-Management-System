@@ -85,7 +85,6 @@
 
                         <form action="javascript:void(0)" id="account_settings_form">
                             <!-- Profile Section -->
-                            <h6 class="text-uppercase text-secondary mb-3">Profile Information</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="account_settings_full_name">Full Name</label>
@@ -98,14 +97,27 @@
                             </div>
 
                             <!-- Security Section -->
-                            <h6 class="text-uppercase text-secondary mt-4 mb-3">Security</h6>
                             <div class="form-group">
-                                <label for="account_settings_password">New Password <small class="text-muted">(leave blank if unchanged)</small></label>
-                                <input type="password" class="form-control" id="account_settings_password">
+                                <label for="account_settings_old_password">Old Password</label>
+                                <input type="password" class="form-control" id="account_settings_old_password">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="account_settings_new_password">New Password <small class="text-muted">(leave blank if unchanged)</small></label>
+                                        <input type="password" class="form-control" id="account_settings_new_password">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="account_settings_confirm_password">Confirm New Password</label>
+                                        <input type="password" class="form-control" id="account_settings_confirm_password">
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Account Details -->
-                            <h6 class="text-uppercase text-secondary mt-4 mb-3">Account Details</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="role">Role</label>
@@ -113,7 +125,8 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="createdAt">Member Since</label>
-                                    <input type="text" class="form-control text-muted" id="createdAt" value="<?= date('F j, Y', strtotime($user['created_at'])) ?>" readonly>        </div>
+                                    <input type="text" class="form-control text-muted" id="createdAt" value="<?= date('F j, Y', strtotime($user['created_at'])) ?>" readonly>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -135,7 +148,8 @@
         <script>
             const base_url = <?= json_encode(base_url()) ?>;
             const server_url = <?= json_encode(base_url() . 'server') ?>;
-            const validity = <?= json_encode(env('APP_VALIDITY')) ?>;
+            const app_validity = <?= json_encode(env('APP_VALIDITY')) ?>;
+            const app_debug = <?= json_encode(env('APP_DEBUG')) ?>;
             const notification = <?= isset($_SESSION['notification']) ? json_encode($_SESSION['notification']) : 'null'; ?>;
         </script>
 

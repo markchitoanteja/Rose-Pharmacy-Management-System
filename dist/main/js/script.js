@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    let debugAllowed = true;
+    let debugAllowed = app_debug == "true" ? true : false;
     let cheatBuffer = "";
 
     const cheatCode = "hesoyam";
@@ -147,39 +147,72 @@ $(document).ready(function () {
     $('#account_settings_form').submit(function () {
         const full_name = $('#account_settings_full_name').val().trim();
         const username = $('#account_settings_username').val().trim();
-        const password = $('#account_settings_password').val().trim();
+        const old_password = $('#account_settings_old_password').val().trim();
+        const new_password = $('#account_settings_new_password').val().trim();
+        const confirm_password = $('#account_settings_confirm_password').val().trim();
 
         is_loading(true);
 
         var formData = new FormData();
-
         formData.append('full_name', full_name);
         formData.append('username', username);
-        formData.append('password', password);
-
+        formData.append('old_password', old_password);
+        formData.append('new_password', new_password);
+        formData.append('confirm_password', confirm_password);
         formData.append('action', 'update_account');
 
         $.ajax({
             url: server_url,
             data: formData,
             type: 'POST',
+            dataType: 'JSON',
             processData: false,
             contentType: false,
-            success: function (response) {
-                if (response) {
+            success: function (res) {
+                if (res.status === 'success') {
                     location.reload();
                 } else {
-                    $('#account_settings_username').addClass('is-invalid');
-                    if ($('#account_settings_username').next('.invalid-feedback').length === 0) {
-                        $('#account_settings_username').after('<small class="text-danger invalid-feedback">Username already exists.</small>');
-                    }
                     is_loading(false);
+
+                    if (res.message === 'username_exists') {
+                        $('#account_settings_username').addClass('is-invalid');
+                        if ($('#account_settings_username').next('.invalid-feedback').length === 0) {
+                            $('#account_settings_username').after('<small class="text-danger invalid-feedback">Username already exists.</small>');
+                        }
+
+                    } else if (res.message === 'invalid_old_password') {
+                        $('#account_settings_old_password').addClass('is-invalid');
+                        if ($('#account_settings_old_password').next('.invalid-feedback').length === 0) {
+                            $('#account_settings_old_password').after('<small class="text-danger invalid-feedback">Old password is incorrect.</small>');
+                        }
+
+                    } else if (res.message === 'password_mismatch') {
+                        $('#account_settings_new_password').addClass('is-invalid');
+                        if ($('#account_settings_new_password').next('.invalid-feedback').length === 0) {
+                            $('#account_settings_new_password').after('<small class="text-danger invalid-feedback">New password and confirmation do not match.</small>');
+                        }
+                        $('#account_settings_confirm_password').addClass('is-invalid');
+
+                    } else {
+                        console.error('Error:', res.message);
+                    }
                 }
             },
             error: function (_, _, error) {
                 console.error(error);
+                is_loading(false);
             }
         });
+    });
+
+    $('#account_settings_new_password, #account_settings_confirm_password').on('input', function () {
+        $('#account_settings_new_password, #account_settings_confirm_password').removeClass('is-invalid is-valid');
+        $('#account_settings_new_password').next('.invalid-feedback').remove();
+    });
+
+    $('#account_settings_old_password').on('input', function () {
+        $(this).removeClass('is-invalid');
+        $(this).next('.invalid-feedback').remove();
     });
 
     $('#account_settings_username').on('input', function () {
@@ -396,8 +429,39 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click', '.loadable', function(){
+    $(document).on('click', '.loadable', function () {
         is_loading(true);
+    });
+
+    $("#add_note_form").submit(function () {
+        const title = $("#note_title").val().trim();
+        const content = $("#note_content").val().trim();
+
+        is_loading(true);
+
+        var formData = new FormData();
+
+        formData.append('title', title);
+        formData.append('content', content);
+
+        formData.append('action', 'add_note');
+
+        $.ajax({
+            url: server_url,
+            data: formData,
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response) {
+                    location.reload();
+                }
+            },
+            error: function (_, _, error) {
+                console.error(error);
+            }
+        });
     });
 
     setInterval(function () {
@@ -426,7 +490,7 @@ $(document).ready(function () {
     }
 
     function checkExpiration() {
-        const encrypted = validity;
+        const encrypted = app_validity;
         const decoded = atob(encrypted);
         const parts = decoded.match(/(\w+)\s(\d+),\s(\d{4})/);
 

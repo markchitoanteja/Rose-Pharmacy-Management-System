@@ -34,6 +34,11 @@ if ($action === 'login_user') {
             // ✅ Only allow active users
             $_SESSION['user_id'] = $user['user_id'];
 
+            // Get Role
+            $role = $db->select_one("roles", "role_id = ?", [$user['role_id']]);
+
+            $_SESSION['role'] = $role['role_name'];
+
             if ($remember) {
                 $_SESSION['username'] = $username;
                 $_SESSION['password'] = $password;
@@ -74,45 +79,67 @@ if ($action === 'login_user') {
 if ($action === 'update_account') {
     $full_name = trim($_POST['full_name'] ?? '');
     $username = trim($_POST['username'] ?? '');
-    $password = trim($_POST['password'] ?? '');
-
-    $response = false;
+    $old_password = trim($_POST['old_password'] ?? '');
+    $new_password = trim($_POST['new_password'] ?? '');
+    $confirm_password = trim($_POST['confirm_password'] ?? '');
 
     $user_id = $_SESSION['user_id'];
+    $response = ['status' => 'error', 'message' => 'Unknown error'];
 
-    // Check if username is taken by another user
+    // Check if username already taken
     $existingUser = $db->select_one("users", "username = ? AND user_id != ?", [$username, $user_id]);
+    if ($existingUser) {
+        $response = ['status' => 'error', 'message' => 'username_exists'];
+        echo json_encode($response);
+        exit;
+    }
 
-    if (!$existingUser) {
-        // Prepare data for update
-        $data = [
-            "full_name" => $full_name,
-            "username" => $username
+    // Fetch current user
+    $user = $db->select_one("users", "user_id = ?", [$user_id]);
+
+    // Prepare update data
+    $data = [
+        "full_name" => $full_name,
+        "username" => $username
+    ];
+
+    // Password update logic
+    if (!empty($new_password)) {
+        // Verify old password
+        if (!password_verify($old_password, $user['password_hash'])) {
+            $response = ['status' => 'error', 'message' => 'invalid_old_password'];
+            echo json_encode($response);
+            exit;
+        }
+
+        // Confirm new passwords match
+        if ($new_password !== $confirm_password) {
+            $response = ['status' => 'error', 'message' => 'password_mismatch'];
+            echo json_encode($response);
+            exit;
+        }
+
+        $data["password_hash"] = password_hash($new_password, PASSWORD_BCRYPT);
+    }
+
+    // Perform update
+    $updated = $db->update("users", $data, "user_id = ?", [$user_id]);
+
+    if ($updated) {
+        $_SESSION['notification'] = [
+            "icon" => "success",
+            "text" => "Account updated successfully.",
+            "title" => "Success"
         ];
-
-        if (!empty($password)) {
-            $data["password_hash"] = password_hash($password, PASSWORD_BCRYPT);
-        }
-
-        $updated = $db->update("users", $data, "user_id = ?", [$user_id]);
-
-        if ($updated) {
-            $_SESSION['notification'] = [
-                "icon" => "success",
-                "text" => "Account updated successfully.",
-                "title" => "Success"
-            ];
-            // Log activity
-            log_user_activity($db, $user_id, 'Account updated');
-        } else {
-            $_SESSION['notification'] = [
-                "icon" => "error",
-                "text" => "No changes were made or an error occurred.",
-                "title" => "Error"
-            ];
-        }
-
-        $response = true;
+        log_user_activity($db, $user_id, 'Account updated');
+        $response = ['status' => 'success'];
+    } else {
+        $_SESSION['notification'] = [
+            "icon" => "error",
+            "text" => "No changes were made or an error occurred.",
+            "title" => "Error"
+        ];
+        $response = ['status' => 'error', 'message' => 'update_failed'];
     }
 
     echo json_encode($response);
@@ -306,9 +333,69 @@ if ($action === 'toggle_user') {
     echo json_encode($response);
 }
 
+if ($action === 'add_note') {
+    $title = trim($_POST['title'] ?? '');
+    $content = trim($_POST['content'] ?? '');
+
+    $response = false;
+
+    $data = [
+        "user_id" => $_SESSION["session_id"],
+        "title" => $title,
+        "content" => $content,
+    ];
+
+    // Check if username is taken
+    $existingUser = $db->select_one("users", "username = ?", [$username]);
+
+    if (!$existingUser) {
+        // Prepare data for insertion
+        $data = [
+            "full_name" => $full_name,
+            "username" => $username,
+            "password_hash" => password_hash($password, PASSWORD_BCRYPT),
+            "role_id" => $role_id,
+            "created_at" => date('Y-m-d H:i:s')
+        ];
+
+        $inserted = $db->insert("users", $data);
+
+        if ($inserted) {
+            $_SESSION['notification'] = [
+                "icon" => "success",
+                "text" => "User added successfully.",
+                "title" => "Success"
+            ];
+            // Log activity
+            $admin_user_id = $_SESSION['user_id'] ?? null;
+            if ($admin_user_id) {
+                log_user_activity($db, $admin_user_id, 'Added new user: ' . $username);
+            }
+        } else {
+            $_SESSION['notification'] = [
+                "icon" => "error",
+                "text" => "An error occurred while adding the user.",
+                "title" => "Error"
+            ];
+        }
+
+        $response = true;
+    } else {
+        $_SESSION['notification'] = [
+            "icon" => "error",
+            "text" => "Username is already taken.",
+            "title" => "Error"
+        ];
+    }
+
+    echo json_encode($response);
+}
+
 if ($action === 'logout') {
     $user_id = $_SESSION['user_id'] ?? null;
+
     unset($_SESSION['user_id']);
+    unset($_SESSION['role']);
 
     $_SESSION['notification'] = ["icon" => "success", "text" => "You have been logged out successfully.", "title" => "Logged Out"];
 

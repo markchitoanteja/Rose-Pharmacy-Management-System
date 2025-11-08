@@ -115,7 +115,8 @@ if (isset($_SESSION['user_id'])) {
     <script>
         const base_url = <?= json_encode(base_url()) ?>;
         const server_url = <?= json_encode(base_url() . 'server') ?>;
-        const validity = <?= json_encode(env('APP_VALIDITY')) ?>;
+        const app_validity = <?= json_encode(env('APP_VALIDITY')) ?>;
+        const app_debug = <?= json_encode(env('APP_DEBUG')) ?>;
         const notification = <?= isset($_SESSION['notification']) ? json_encode($_SESSION['notification']) : 'null'; ?>;
     </script>
 

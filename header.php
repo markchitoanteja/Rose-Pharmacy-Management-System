@@ -1,5 +1,4 @@
 <?php
-// dashboard.php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -83,8 +82,15 @@ if ($currentPage === 'activity_logs.php') {
                 <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
             </a>
 
-            <?php if ($user['role_id'] == 1): // Admin only 
-            ?>
+            <a href="notes.php" class="<?= $currentPage === 'notes.php' ? 'active' : ''; ?>">
+                <i class="fas fa-sticky-note mr-1"></i> Notes
+            </a>
+
+            <?php if ($_SESSION['role'] == "Admin"): ?>
+                <a href="cashier.php" class="loadable <?= $currentPage === 'cashier.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-cash-register mr-1"></i> Cashier
+                </a>
+
                 <a href="medicines.php" class="loadable <?= $currentPage === 'medicines.php' ? 'active' : ''; ?>">
                     <i class="fas fa-pills mr-1"></i> Medicines <i class="fas fa-tools float-right text-warning"></i>
                 </a>
@@ -106,8 +112,11 @@ if ($currentPage === 'activity_logs.php') {
                 </a>
             <?php endif; ?>
 
-            <?php if ($user['role_id'] == 2): // Cashier only 
-            ?>
+            <?php if ($_SESSION['role'] == "Pharmacist"): ?>
+                <a href="medicines.php" class="loadable <?= $currentPage === 'medicines.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-pills mr-1"></i> Medicines <i class="fas fa-tools float-right text-warning"></i>
+                </a>
+
                 <a href="cashier.php" class="loadable <?= $currentPage === 'cashier.php' ? 'active' : ''; ?>">
                     <i class="fas fa-cash-register mr-1"></i> Cashier
                 </a>
