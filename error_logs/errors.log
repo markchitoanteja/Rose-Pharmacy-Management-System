@@ -1,10 +1,4 @@
-[2025-11-08 11:12:00] ERROR: Table 'rose_pharmacy_management_system.notes' doesn't exist
-[2025-11-08 11:13:00] ERROR: Unknown column 'n.id' in 'field list'
-[2025-11-08 11:13:07] ERROR: Unknown column 'n.id' in 'field list'
-[2025-11-08 11:13:56] ERROR: Unknown column 'n.id' in 'field list'
-[2025-11-08 11:15:15] ERROR: Unknown column 'n.id' in 'field list'
-[2025-11-08 11:16:22] ERROR: Unknown column 'n.id' in 'field list'
-[2025-11-08 11:16:33] ERROR: Unknown column 'n.id' in 'field list'
-[2025-11-08 11:16:42] ERROR: Unknown column 'n.id' in 'field list'
-[2025-11-08 11:17:35] ERROR: Unknown column 'n.id' in 'field list'
-[2025-11-08 11:17:43] ERROR: Unknown column 'n.id' in 'field list'
+[2025-11-09 00:04:19] ERROR: Unknown column 's.discount_type' in 'field list'
+[2025-11-09 00:06:31] ERROR: Unknown column 's.discount_type' in 'field list'
+[2025-11-09 00:06:37] ERROR: Unknown column 's.discount_type' in 'field list'
+[2025-11-09 00:10:38] ERROR: Custom_query execution failed: 

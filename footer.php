@@ -139,6 +139,27 @@
             </div>
         </div>
 
+        <!-- Notification Details Modal -->
+        <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Notification Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="notifMessage" class="mb-3" style="font-size: 1rem; white-space: pre-line;"></p>
+                        <small id="notifTime" class="text-muted"></small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light border" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Footer -->
         <footer class="footer">
             &copy; <?= date("Y"); ?> Rose Pharmacy Incorporated. All rights reserved.
@@ -156,13 +177,15 @@
         <script src="dist/plugins/jquery/jquery.min.js?ver=<?= env('APP_VERSION') ?>"></script>
         <script src="dist/plugins/bootstrap/js/bootstrap.bundle.min.js?ver=<?= env('APP_VERSION') ?>"></script>
         <script src="dist/plugins/sweetalert/js/sweetalert.min.js?ver=<?= env('APP_VERSION') ?>"></script>
+        <script src="dist/plugins/jspdf/js/jspdf.umd.min.js?ver=<?= env('APP_VERSION') ?>"></script>
+        <script src="dist/plugins/jspdf-autotable/js/jspdf.plugin.autotable.min.js?ver=<?= env('APP_VERSION') ?>"></script>
+
         <!-- DataTables JS -->
         <script src="dist/plugins/datatables/js/jquery.dataTables.min.js?ver=<?= env('APP_VERSION') ?>"></script>
         <script src="dist/plugins/datatables/js/dataTables.bootstrap4.min.js?ver=<?= env('APP_VERSION') ?>"></script>
         <script src="dist/main/js/script.js?ver=<?= env('APP_VERSION') ?>"></script>
 
-        </body>
+    </body>
+</html>
 
-        </html>
-
-        <?php unset($_SESSION['notification']); ?>
+<?php unset($_SESSION['notification']); ?>

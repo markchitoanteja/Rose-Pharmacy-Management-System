@@ -134,7 +134,9 @@ $total_sales = isset($result) ? $result : 0;
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h6 class="mb-0">Recent Transactions</h6>
-                <a href="<?= base_url('sales') ?>" class="btn btn-sm btn-outline-primary loadable">View All</a>
+                <?php if ($_SESSION["role"] === "Admin") : ?>
+                    <a href="<?= base_url('sales') ?>" class="btn btn-sm btn-outline-primary loadable">View All</a>
+                <?php endif; ?>
             </div>
             <div class="card-body">
                 <table class="table table-bordered datatable">

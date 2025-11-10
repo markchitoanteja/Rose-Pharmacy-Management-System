@@ -20,6 +20,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
 if ($currentPage === 'activity_logs.php') {
     $page_title = 'Activity Logs';
+} elseif ($currentPage === 'pos.php') {
+    $page_title = 'Point of Sale';
 } else {
     $page_title = ucfirst(str_replace('.php', '', $currentPage));
 }
@@ -60,6 +62,28 @@ if ($currentPage === 'activity_logs.php') {
             </div>
 
             <ul class="navbar-nav ml-auto">
+                <?php if ($_SESSION['role'] == "Admin"): ?>
+                    <!-- Notifications Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link position-relative" href="javascript:void(0)" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-bell fa-lg"></i>
+                            <span class="badge badge-danger" id="notificationCount"></span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right shadow-sm notification-dropdown" aria-labelledby="notificationDropdown">
+                            <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
+                                <h6 class="mb-0 font-weight-bold">Notifications</h6>
+                                <button class="btn btn-sm btn-link text-primary p-0" id="markAllReadBtn">Mark all as read</button>
+                            </div>
+                            <div id="notificationsContainer" class="notification-list">
+                                <p class="text-center text-muted mb-0 py-3">No new notifications</p>
+                            </div>
+                            <div class="dropdown-divider my-0"></div>
+                            <a href="notifications" class="dropdown-item text-center text-primary font-weight-bold py-2">View All</a>
+                        </div>
+                    </li>
+                <?php endif ?>
+
                 <!-- User dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="userDropdown" role="button" data-toggle="dropdown">
@@ -78,47 +102,54 @@ if ($currentPage === 'activity_logs.php') {
 
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
+            <!-- Dashboard -->
             <a href="dashboard.php" class="<?= $currentPage === 'dashboard.php' ? 'active' : ''; ?>">
                 <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
             </a>
 
-            <a href="notes.php" class="<?= $currentPage === 'notes.php' ? 'active' : ''; ?>">
-                <i class="fas fa-sticky-note mr-1"></i> Notes
-            </a>
-
             <?php if ($_SESSION['role'] == "Admin"): ?>
-                <a href="cashier.php" class="loadable <?= $currentPage === 'cashier.php' ? 'active' : ''; ?>">
-                    <i class="fas fa-cash-register mr-1"></i> Cashier
-                </a>
-
-                <a href="medicines.php" class="loadable <?= $currentPage === 'medicines.php' ? 'active' : ''; ?>">
-                    <i class="fas fa-pills mr-1"></i> Medicines <i class="fas fa-tools float-right text-warning"></i>
-                </a>
-
-                <a href="suppliers.php" class="loadable <?= $currentPage === 'suppliers.php' ? 'active' : ''; ?>">
-                    <i class="fas fa-truck mr-1"></i> Suppliers <i class="fas fa-tools float-right text-warning"></i>
+                <!-- POS / Sales -->
+                <a href="pos.php" class="loadable <?= $currentPage === 'pos.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-cash-register mr-1"></i> POS
                 </a>
 
                 <a href="sales.php" class="loadable <?= $currentPage === 'sales.php' ? 'active' : ''; ?>">
-                    <i class="fas fa-shopping-cart mr-1"></i> Sales <i class="fas fa-tools float-right text-warning"></i>
+                    <i class="fas fa-shopping-cart mr-1"></i> Sales
                 </a>
 
+                <!-- Inventory Management -->
+                <a href="medicines.php" class="loadable <?= $currentPage === 'medicines.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-pills mr-1"></i> Medicines
+                </a>
+
+                <a href="suppliers.php" class="loadable <?= $currentPage === 'suppliers.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-truck mr-1"></i> Suppliers
+                </a>
+
+                <!-- User Management -->
                 <a href="users.php" class="loadable <?= $currentPage === 'users.php' ? 'active' : ''; ?>">
                     <i class="fas fa-users mr-1"></i> Users
                 </a>
 
+                <!-- System Monitoring -->
                 <a href="activity_logs.php" class="loadable <?= $currentPage === 'activity_logs.php' ? 'active' : ''; ?>">
                     <i class="fas fa-file-alt mr-1"></i> Activity Logs
                 </a>
-            <?php endif; ?>
 
-            <?php if ($_SESSION['role'] == "Pharmacist"): ?>
+            <?php elseif ($_SESSION['role'] == "Pharmacist"): ?>
+                <!-- POS / Sales -->
+                <a href="pos.php" class="loadable <?= $currentPage === 'pos.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-cash-register mr-1"></i> POS
+                </a>
+
+                <!-- Inventory Management -->
                 <a href="medicines.php" class="loadable <?= $currentPage === 'medicines.php' ? 'active' : ''; ?>">
-                    <i class="fas fa-pills mr-1"></i> Medicines <i class="fas fa-tools float-right text-warning"></i>
-                </a>
-
-                <a href="cashier.php" class="loadable <?= $currentPage === 'cashier.php' ? 'active' : ''; ?>">
-                    <i class="fas fa-cash-register mr-1"></i> Cashier
+                    <i class="fas fa-pills mr-1"></i> Medicines
                 </a>
             <?php endif; ?>
+
+            <!-- Notes (common to all) -->
+            <a href="notes.php" class="<?= $currentPage === 'notes.php' ? 'active' : ''; ?>">
+                <i class="fas fa-sticky-note mr-1"></i> Notes
+            </a>
         </div>

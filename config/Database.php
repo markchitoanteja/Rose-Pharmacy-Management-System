@@ -54,76 +54,91 @@ class Database
         $queries = [];
 
         $queries[] = "CREATE TABLE IF NOT EXISTS roles (
-        role_id INT PRIMARY KEY AUTO_INCREMENT,
-        role_name VARCHAR(50) NOT NULL
-    )";
+            role_id INT PRIMARY KEY AUTO_INCREMENT,
+            role_name VARCHAR(50) NOT NULL
+        )";
 
         $queries[] = "CREATE TABLE IF NOT EXISTS users (
-        user_id INT PRIMARY KEY AUTO_INCREMENT,
-        full_name VARCHAR(100) NOT NULL,
-        username VARCHAR(50) UNIQUE NOT NULL,
-        password_hash VARCHAR(255) NOT NULL,
-        role_id INT NOT NULL,
-        is_active TINYINT(1) NOT NULL DEFAULT 1,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (role_id) REFERENCES roles(role_id)
-    )";
+            user_id INT PRIMARY KEY AUTO_INCREMENT,
+            full_name VARCHAR(100) NOT NULL,
+            username VARCHAR(50) UNIQUE NOT NULL,
+            email VARCHAR(100),
+            password_hash VARCHAR(255) NOT NULL,
+            role_id INT NOT NULL,
+            is_active TINYINT(1) NOT NULL DEFAULT 1,
+            last_login TIMESTAMP NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (role_id) REFERENCES roles(role_id)
+        )";
 
         $queries[] = "CREATE TABLE IF NOT EXISTS suppliers (
-        supplier_id INT PRIMARY KEY AUTO_INCREMENT,
-        name VARCHAR(100) NOT NULL,
-        contact_number VARCHAR(20),
-        address VARCHAR(255)
-    )";
+            supplier_id INT PRIMARY KEY AUTO_INCREMENT,
+            name VARCHAR(100) NOT NULL,
+            contact_number VARCHAR(20),
+            address VARCHAR(255)
+        )";
 
         $queries[] = "CREATE TABLE IF NOT EXISTS medicines (
-        medicine_id INT PRIMARY KEY AUTO_INCREMENT,
-        name VARCHAR(100) NOT NULL,
-        category VARCHAR(50),
-        description TEXT,
-        unit_price DECIMAL(10,2) NOT NULL,
-        quantity INT NOT NULL DEFAULT 0,
-        expiry_date DATE,
-        supplier_id INT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
-    )";
+            medicine_id INT PRIMARY KEY AUTO_INCREMENT,
+            name VARCHAR(100) NOT NULL,
+            category VARCHAR(50),
+            description TEXT,
+            unit_price DECIMAL(10,2) NOT NULL,
+            quantity INT NOT NULL DEFAULT 0,
+            stock_alert_level INT DEFAULT 5,
+            expiry_date DATE,
+            is_otc TINYINT(1) DEFAULT 1,
+            supplier_id INT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
+        )";
 
         $queries[] = "CREATE TABLE IF NOT EXISTS sales (
-        sale_id INT PRIMARY KEY AUTO_INCREMENT,
-        user_id INT NOT NULL,
-        total_amount DECIMAL(10,2) NOT NULL,
-        sale_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(user_id)
-    )";
+            sale_id INT PRIMARY KEY AUTO_INCREMENT,
+            user_id INT NOT NULL,
+            total_amount DECIMAL(10,2) NOT NULL,
+            receipt_number VARCHAR(50) UNIQUE,
+            sale_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(user_id)
+        )";
 
         $queries[] = "CREATE TABLE IF NOT EXISTS sale_items (
-        sale_item_id INT PRIMARY KEY AUTO_INCREMENT,
-        sale_id INT NOT NULL,
-        medicine_id INT NOT NULL,
-        quantity INT NOT NULL,
-        price DECIMAL(10,2) NOT NULL,
-        FOREIGN KEY (sale_id) REFERENCES sales(sale_id),
-        FOREIGN KEY (medicine_id) REFERENCES medicines(medicine_id)
-    )";
+            sale_item_id INT PRIMARY KEY AUTO_INCREMENT,
+            sale_id INT NOT NULL,
+            medicine_id INT NOT NULL,
+            quantity INT NOT NULL,
+            price DECIMAL(10,2) NOT NULL,
+            discount DECIMAL(10,2) DEFAULT 0,
+            FOREIGN KEY (sale_id) REFERENCES sales(sale_id),
+            FOREIGN KEY (medicine_id) REFERENCES medicines(medicine_id)
+        )";
 
         $queries[] = "CREATE TABLE IF NOT EXISTS activity_logs (
-        log_id INT PRIMARY KEY AUTO_INCREMENT,
-        user_id INT NOT NULL,
-        action VARCHAR(255) NOT NULL,
-        log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(user_id)
-    )";
+            log_id INT PRIMARY KEY AUTO_INCREMENT,
+            user_id INT NOT NULL,
+            action VARCHAR(255) NOT NULL,
+            log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(user_id)
+        )";
 
         $queries[] = "CREATE TABLE IF NOT EXISTS notes (
-        note_id INT PRIMARY KEY AUTO_INCREMENT,
-        user_id INT NOT NULL,
-        title VARCHAR(255) NOT NULL,
-        content TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-    )";
+            note_id INT PRIMARY KEY AUTO_INCREMENT,
+            user_id INT NOT NULL,
+            title VARCHAR(255) NOT NULL,
+            content TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+        )";
+
+        $queries[] = "CREATE TABLE IF NOT EXISTS notifications (
+            notification_id INT PRIMARY KEY AUTO_INCREMENT,
+            user_id INT NOT NULL,
+            message VARCHAR(255) NOT NULL,
+            is_read TINYINT(1) DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+        )";
 
         foreach ($queries as $sql) {
             if (!$this->conn->query($sql)) {
