@@ -98,7 +98,7 @@ feature.
 
 3.  Rename the folder to:
 
-        JIAN's-Pharmacy-Management-System
+        Jian-Pharmacy-Management-System
 
 4.  Move it to:
 
@@ -108,12 +108,12 @@ feature.
 
 ``` bash
 cd C:\xampp\htdocs\
-git clone https://github.com/your-repo/JIAN's-Pharmacy-Management-System.git
+git clone https://github.com/your-repo/Jian-Pharmacy-Management-System.git
 ```
 
 Your project path should now be:
 
-    C:\xampp\htdocs\JIAN's-Pharmacy-Management-System\
+    C:\xampp\htdocs\Jian-Pharmacy-Management-System\
 
 ------------------------------------------------------------------------
 
@@ -121,7 +121,7 @@ Your project path should now be:
 
 1.  Open [phpMyAdmin](http://localhost/phpmyadmin).
 2.  Create a new database:
-    -   **Name:** `JIAN's_pharmacy_management_system`
+    -   **Name:** `jian_pharmacy_management_system`
     -   **Collation:** `utf8mb4_general_ci`
 3.  The system will **auto-create tables** upon first run (via
     `Database.php`).
@@ -149,7 +149,7 @@ DB_PASSWORD=
 
 Visit:
 
-    http://localhost/JIAN's-Pharmacy-Management-System
+    http://localhost/Jian-Pharmacy-Management-System
 
 You'll see the login page.
 
@@ -226,11 +226,11 @@ You'll see the login page.
 MySQL services). - Or change ports in XAMPP settings.
 
 **Broken login page:** - Access via:
-`http://localhost/JIAN's-Pharmacy-Management-System` (Don't open the HTML
+`http://localhost/Jian-Pharmacy-Management-System` (Don't open the HTML
 file directly.)
 
 **Database empty or missing:** - Make sure you created
-`JIAN's_pharmacy_management_system` in phpMyAdmin. - Reload the app ---
+`jian_pharmacy_management_system` in phpMyAdmin. - Reload the app ---
 tables are auto-generated if missing.
 
 ------------------------------------------------------------------------
