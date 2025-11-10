@@ -56,7 +56,6 @@ if ($user['role_id'] != 1) {
                                     <td><?= htmlspecialchars($sup['address']) ?></td>
                                     <td class="text-center">
                                         <i class="fas fa-pencil-alt text-primary edit_supplier" role="button" data-id="<?= $sup['supplier_id'] ?>" title="Edit"></i>
-                                        <i class="fas fa-trash-alt text-danger delete_supplier" role="button" data-id="<?= $sup['supplier_id'] ?>" title="Delete"></i>
                                     </td>
                                 </tr>
                         <?php endforeach;

@@ -186,10 +186,6 @@ $recent_sales = $db->custom_query("
                                     <td><?= date("F j, Y g:i A", strtotime($sale['sale_date'])) ?></td>
                                 </tr>
                             <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="5" class="text-center text-muted">No recent transactions found.</td>
-                            </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

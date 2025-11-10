@@ -1,5 +1,5 @@
 <?php
-$correctFolder = 'Rose-Pharmacy-Management-System';
+$correctFolder = 'Jian-Pharmacy-Management-System';
 $currentFolder = basename(__DIR__);
 $parentDir = dirname(__DIR__);
 
@@ -16,7 +16,7 @@ if ($currentFolder === $correctFolder) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fix Folder Name - Rose Pharmacy</title>
+    <title>Fix Folder Name - JIAN's Pharmacy</title>
 
     <!-- Bootstrap and FontAwesome -->
     <link rel="stylesheet" href="dist/plugins/bootstrap/css/bootstrap.min.css">
@@ -53,7 +53,7 @@ if ($currentFolder === $correctFolder) {
             </div>
         </div>
         <div class="card-footer text-muted text-center">
-            Rose Pharmacy Management System
+            JIAN's Pharmacy Management System
         </div>
     </div>
 

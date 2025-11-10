@@ -106,9 +106,6 @@
                                     </td>
                                     <td class="text-center">
                                         <i class="fas fa-pencil-alt text-primary edit_medicine" role="button" data-id="<?= $med['medicine_id'] ?>" title="Edit"></i>
-                                        <?php if ($_SESSION['role'] == "Admin"): ?>
-                                            <i class="fas fa-trash-alt text-danger delete_medicine" role="button" data-id="<?= $med['medicine_id'] ?>" title="Delete"></i>
-                                        <?php endif; ?>
                                     </td>
                                 </tr>
                         <?php

@@ -33,9 +33,9 @@ if ($currentPage === 'activity_logs.php') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Rose Pharmacy - <?= e($page_title) ?></title>
+    <title>JIAN's Pharmacy - <?= e($page_title) ?></title>
 
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico?ver=<?= env('APP_VERSION') ?>" type="image/x-icon">
 
     <link rel="stylesheet" href="dist/plugins/bootstrap/css/bootstrap.min.css?ver=<?= env('APP_VERSION') ?>">
     <link rel="stylesheet" href="dist/plugins/fontawesome/css/all.min.css?ver=<?= env('APP_VERSION') ?>">
@@ -55,7 +55,7 @@ if ($currentPage === 'activity_logs.php') {
         <!-- Top Navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
             <div class="navbar-container">
-                <a class="navbar-brand loadable" href="<?= base_url() ?>">Rose Pharmacy</a>
+                <a class="navbar-brand loadable" href="<?= base_url() ?>">JIAN's Pharmacy</a>
                 <a class="btn btn-link text-white float-right" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
                 </a>

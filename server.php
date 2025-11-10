@@ -983,7 +983,7 @@ if ($action === 'get_receipt') {
         // Logo + Header
         $html .= '<div class="text-center mb-2">';
         $html .= '<img src="' . base_url() . 'dist/auth/images/logo.png" alt="Logo" style="border-radius:50%; max-width:80px;margin-bottom:5px;"><br>';
-        $html .= '<strong>Rose Pharmacy Inc.</strong><br>';
+        $html .= '<strong>JIAN\'s Pharmacy Inc.</strong><br>';
         $html .= 'Dolores, Eastern Samar<br>';
         $html .= 'Tel: 0912-345-6789';
         $html .= '</div>';

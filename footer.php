@@ -14,7 +14,7 @@
                     <div class="modal-body">
                         <!-- Company Header -->
                         <div class="text-center mb-4">
-                            <h4 class="font-weight-bold text-primary mb-1">Rose Pharmacy Incorporated</h4>
+                            <h4 class="font-weight-bold text-primary mb-1">JIAN's Pharmacy Incorporated</h4>
                             <p class="text-muted mb-0">Your trusted partner in health and wellness.</p>
                         </div>
 
@@ -23,7 +23,7 @@
                         <!-- About Section -->
                         <div class="mb-4">
                             <p class="mb-0">
-                                For decades, <strong>Rose Pharmacy</strong> has been committed to providing
+                                For decades, <strong>JIAN's Pharmacy</strong> has been committed to providing
                                 high-quality medicines, essential healthcare products, and personalized service.
                                 We strive to promote healthier communities through compassion, care,
                                 and professionalism.
@@ -49,7 +49,7 @@
 
                         <!-- Footer -->
                         <div class="text-center">
-                            <small class="text-muted d-block">&copy; 2025 Rose Pharmacy Incorporated</small>
+                            <small class="text-muted d-block">&copy; 2025 JIAN's Pharmacy Incorporated</small>
                             <small class="text-muted">All rights reserved.</small>
                         </div>
                     </div>
@@ -162,7 +162,7 @@
 
         <!-- Footer -->
         <footer class="footer">
-            &copy; <?= date("Y"); ?> Rose Pharmacy Incorporated. All rights reserved.
+            &copy; <?= date("Y"); ?> JIAN's PharmacyIncorporated. All rights reserved.
         </footer>
         </div>
 
