@@ -1333,7 +1333,7 @@ $(document).ready(function () {
         const end = $('#end_date').val();
 
         $.ajax({
-            url: server_url, // backend handler for filtered sales
+            url: server_url, // backend handler (e.g., ajax_handler.php)
             type: 'POST',
             dataType: 'JSON',
             data: {
@@ -1345,14 +1345,15 @@ $(document).ready(function () {
                 if (response.success) {
                     let rows = '';
                     if (response.data.length === 0) {
-                        rows = '<tr><td colspan="3" class="text-center">No sales found.</td></tr>';
+                        rows = '<tr><td colspan="4" class="text-center">No sales found.</td></tr>';
                     } else {
                         response.data.forEach(sale => {
                             rows += `<tr>
-                                <td>${sale.receipt_number}</td>
-                                <td>${sale.sale_date}</td>
-                                <td>${sale.total}</td>
-                            </tr>`;
+                            <td>${sale.receipt_number}</td>
+                            <td>${sale.cashier}</td>
+                            <td>${sale.sale_date}</td>
+                            <td>${sale.total}</td>
+                        </tr>`;
                         });
                     }
                     $('#salesTable tbody').html(rows);
@@ -1370,15 +1371,14 @@ $(document).ready(function () {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF('p', 'pt'); // portrait, points
 
-        // --- HEADER ---
-        const logoUrl = 'dist/auth/images/logo.png'; // your logo
+        const logoUrl = 'dist/auth/images/logo.png';
         const startX = 40;
         let currentY = 40;
 
-        // Add logo (optional)
+        // Add logo
         doc.addImage(logoUrl, 'PNG', startX, currentY, 50, 50);
 
-        // Add title and pharmacy info
+        // Header text
         doc.setFontSize(16);
         doc.setFont("helvetica", "bold");
         doc.text("Rose Pharmacy Inc.", 120, currentY + 20);
@@ -1395,19 +1395,19 @@ $(document).ready(function () {
         doc.text("Sales Report", startX, currentY);
         currentY += 20;
 
-        // Date
+        // Generated date
         const now = new Date();
         doc.setFontSize(10);
         doc.setFont("helvetica", "normal");
         doc.text(`Generated: ${now.toLocaleString()}`, startX, currentY);
         currentY += 20;
 
-        // --- TABLE ---
-        // Replace ₱ with PHP for PDF compatibility
+        // Replace ₱ with PHP for compatibility
         $('#salesTable td').each(function () {
             $(this).text($(this).text().replace('₱', 'PHP'));
         });
 
+        // AutoTable setup
         doc.autoTable({
             html: '#salesTable',
             startY: currentY,
@@ -1415,23 +1415,20 @@ $(document).ready(function () {
             headStyles: { fillColor: [22, 160, 133], textColor: 255, fontStyle: 'bold' },
             alternateRowStyles: { fillColor: [240, 240, 240] },
             styles: { font: 'helvetica', fontSize: 10, cellPadding: 4 },
-            footStyles: { fillColor: [22, 160, 133], textColor: 255, fontStyle: 'bold' },
             didDrawPage: function (data) {
-                // Add page number
                 const page = doc.internal.getNumberOfPages();
                 doc.setFontSize(8);
                 doc.text(`Page ${page}`, data.settings.margin.left, doc.internal.pageSize.height - 10);
             }
         });
 
-        // --- FOOTER ---
         const finalY = doc.lastAutoTable.finalY || currentY;
         doc.setFontSize(10);
         doc.setFont("helvetica", "italic");
         doc.text("Thank you for your business!", startX, finalY + 30);
         doc.text("Visit us again!", startX, finalY + 45);
 
-        // Save PDF
+        // Save
         doc.save('sales_report.pdf');
     });
 

@@ -1044,9 +1044,12 @@ if ($action === 'filter_sales') {
 
     $params = [];
     $query = "
-        SELECT s.sale_id, s.receipt_number, s.sale_date, SUM(si.quantity * si.price) AS total
+        SELECT s.sale_id, s.receipt_number, s.sale_date, 
+               u.full_name AS cashier,
+               SUM(si.quantity * si.price) AS total
         FROM sales s
         JOIN sale_items si ON s.sale_id = si.sale_id
+        JOIN users u ON s.user_id = u.user_id
     ";
 
     if ($start && $end) {
@@ -1063,6 +1066,7 @@ if ($action === 'filter_sales') {
         foreach ($sales as $sale) {
             $result[] = [
                 'receipt_number' => htmlspecialchars($sale['receipt_number']),
+                'cashier' => htmlspecialchars($sale['cashier']),
                 'sale_date' => date("F j, Y g:i A", strtotime($sale['sale_date'])),
                 'total' => '₱' . number_format($sale['total'], 2)
             ];
@@ -1070,6 +1074,7 @@ if ($action === 'filter_sales') {
     }
 
     echo json_encode(['success' => true, 'data' => $result]);
+    exit;
 }
 
 if ($action === 'logout') {

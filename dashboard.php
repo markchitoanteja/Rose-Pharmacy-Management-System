@@ -1,12 +1,33 @@
 <?php
 include_once 'header.php';
 
+// Dashboard summary stats
 $count_users = count($db->custom_query("SELECT * FROM users WHERE is_active = 1"));
 $count_users_inactive = count($db->custom_query("SELECT * FROM users WHERE is_active = 0"));
 $count_medicines = count($db->select_all("medicines"));
 $count_suppliers = count($db->select_all("suppliers"));
 $result = $db->custom_query("SELECT SUM(total_amount) as total_sales FROM sales", [], true)["total_sales"];
 $total_sales = isset($result) ? $result : 0;
+
+// Helper for currency formatting
+function peso($amount)
+{
+    return '₱' . number_format($amount, 2);
+}
+
+// Fetch recent transactions (latest 10)
+$recent_sales = $db->custom_query("
+    SELECT s.receipt_number, s.sale_date, u.full_name AS cashier_name,
+           SUM(si.quantity * si.price) AS total,
+           GROUP_CONCAT(m.name, ' (', si.quantity, ') ' SEPARATOR ', ') AS items
+    FROM sales s
+    JOIN users u ON s.user_id = u.user_id
+    JOIN sale_items si ON s.sale_id = si.sale_id
+    JOIN medicines m ON si.medicine_id = m.medicine_id
+    GROUP BY s.receipt_number
+    ORDER BY s.sale_date DESC
+    LIMIT 10
+");
 ?>
 
 <style>
@@ -83,12 +104,15 @@ $total_sales = isset($result) ? $result : 0;
                             <i class="fas fa-users"></i>
                         </div>
                         <div>
-                            <h5 class="mb-0"><?= $count_users ?> <small class="text-light">(Inactive: <?= $count_users_inactive ?>)</small></h5>
+                            <h5 class="mb-0"><?= $count_users ?>
+                                <small class="text-light">(Inactive: <?= $count_users_inactive ?>)</small>
+                            </h5>
                             <small>Users</small>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="col-md-3 mb-4 loadable" id="info_medicines">
                 <div class="card info-box bg-success text-white">
                     <div class="card-body d-flex align-items-center">
@@ -102,6 +126,7 @@ $total_sales = isset($result) ? $result : 0;
                     </div>
                 </div>
             </div>
+
             <div class="col-md-3 mb-4 loadable" id="info_suppliers">
                 <div class="card info-box bg-warning text-white">
                     <div class="card-body d-flex align-items-center">
@@ -115,6 +140,7 @@ $total_sales = isset($result) ? $result : 0;
                     </div>
                 </div>
             </div>
+
             <div class="col-md-3 mb-4 loadable" id="info_sales">
                 <div class="card info-box bg-danger text-white">
                     <div class="card-body d-flex align-items-center">
@@ -122,7 +148,7 @@ $total_sales = isset($result) ? $result : 0;
                             <i class="fas fa-shopping-cart"></i>
                         </div>
                         <div>
-                            <h5 class="mb-0">₱<?= number_format($total_sales, 2) ?></h5>
+                            <h5 class="mb-0"><?= peso($total_sales) ?></h5>
                             <small>Sales</small>
                         </div>
                     </div>
@@ -139,23 +165,37 @@ $total_sales = isset($result) ? $result : 0;
                 <?php endif; ?>
             </div>
             <div class="card-body">
-                <table class="table table-bordered datatable">
-                    <thead>
+                <table class="table table-bordered table-hover datatable mb-0">
+                    <thead class="thead-light">
                         <tr>
-                            <th>#</th>
-                            <th>Customer</th>
-                            <th>Medicine</th>
-                            <th>Qty</th>
+                            <th>Receipt #</th>
+                            <th>Cashier</th>
+                            <th>Items</th>
                             <th>Total</th>
                             <th>Date</th>
                         </tr>
                     </thead>
                     <tbody>
-
+                        <?php if (!empty($recent_sales)): ?>
+                            <?php foreach ($recent_sales as $sale): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($sale['receipt_number']) ?></td>
+                                    <td><?= htmlspecialchars($sale['cashier_name']) ?></td>
+                                    <td><?= htmlspecialchars($sale['items']) ?></td>
+                                    <td><?= peso($sale['total']) ?></td>
+                                    <td><?= date("F j, Y g:i A", strtotime($sale['sale_date'])) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">No recent transactions found.</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
         </div>
+
     </div>
 </div>
 

@@ -1,4 +1,0 @@
-[2025-11-09 00:04:19] ERROR: Unknown column 's.discount_type' in 'field list'
-[2025-11-09 00:06:31] ERROR: Unknown column 's.discount_type' in 'field list'
-[2025-11-09 00:06:37] ERROR: Unknown column 's.discount_type' in 'field list'
-[2025-11-09 00:10:38] ERROR: Custom_query execution failed: 
