@@ -133,8 +133,8 @@ Your project path should now be:
 Inside the project folder, find `.env` and update as needed:
 
 ``` env
-APP_URL=http://localhost/JIAN's-Pharmacy-Management-System
-DB_DATABASE=JIAN's_pharmacy_management_system
+APP_URL=http://localhost/Jian-Pharmacy-Management-System
+DB_DATABASE=jian_pharmacy_management_system
 DB_USERNAME=root
 DB_PASSWORD=
 ```
